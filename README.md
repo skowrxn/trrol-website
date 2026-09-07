@@ -23,6 +23,9 @@ z Dysku Google, zawierają dane osobowe) oraz `shots/`.
 - Katalog: `~/domains/trrol.pl/public_html`
 - WordPress 7.1 (pl_PL), PHP 8.2, MySQL — baza `trrol_wp`
 - Dostęp: `ssh -o MACs=hmac-sha2-512-etm@openssh.com trrol@s67.cyber-folks.pl -p 222`
+- HTTPS: Let's Encrypt (auto_Keeper, automatyczne odnawianie) na `trrol.pl`,
+  `www.trrol.pl` i `mail.trrol.pl`. Wymuszenie HTTPS i kanoniczna domena bez `www`
+  w `deploy/htaccess` — kopia pliku `.htaccess` z serwera.
 
 ## Struktura serwisu
 

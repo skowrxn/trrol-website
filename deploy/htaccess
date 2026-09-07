@@ -1,0 +1,20 @@
+# Wymuszenie HTTPS oraz kanonicznej domeny bez www
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+RewriteRule ^ https://trrol.pl%{REQUEST_URI} [L,R=301]
+RewriteCond %{HTTP_HOST} ^www\.trrol\.pl$ [NC]
+RewriteRule ^ https://trrol.pl%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# BEGIN WordPress
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+# END WordPress
