@@ -114,6 +114,15 @@ function trrol_settings_groups() {
 			'pdf_regulamin' => array( 'label' => 'PDF — Regulamin użytkowania lokali', 'type' => 'file', 'hint' => 'Wgraj plik w Multimediach i wklej tutaj jego adres.' ),
 			'pdf_woda'      => array( 'label' => 'PDF — Rozliczanie wody i ścieków', 'type' => 'file' ),
 		),
+		'SEO i widoczność w Google' => array(
+			'seo_opis_home'           => array( 'label' => 'Opis strony głównej', 'hint' => 'To zdanie widać w wynikach wyszukiwania pod tytułem. Najlepiej do 155 znaków.' ),
+			'seo_google_verification' => array( 'label' => 'Kod weryfikacyjny Google', 'hint' => 'Sama wartość z atrybutu content znacznika google-site-verification (Search Console → Weryfikacja → znacznik HTML).' ),
+			'seo_profil_google'       => array( 'label' => 'Wizytówka Google', 'type' => 'url', 'hint' => 'Adres profilu firmy w Mapach Google — łączy stronę z wizytówką.' ),
+			'seo_profil_facebook'     => array( 'label' => 'Profil na Facebooku', 'type' => 'url' ),
+			'seo_mapa_link'           => array( 'label' => 'Link do biura na mapie', 'type' => 'url', 'hint' => 'Zwykły link do lokalizacji biura w Mapach Google.' ),
+			'geo_lat'                 => array( 'label' => 'Szerokość geograficzna biura', 'hint' => 'Opcjonalnie, np. 50.3275. W Mapach Google: prawy przycisk na pinezce → współrzędne.' ),
+			'geo_lng'                 => array( 'label' => 'Długość geograficzna biura', 'hint' => 'Opcjonalnie, np. 19.0294.' ),
+		),
 	);
 }
 

@@ -64,12 +64,7 @@ $related = trrol_related_posts( $post_obj, 2 );
 
 <main>
 	<section class="container" style="padding-top:40px">
-		<?php
-		trrol_breadcrumbs( array(
-			array( 'label' => $archive_label, 'url' => $archive_url ),
-			array( 'label' => wp_trim_words( get_the_title(), 6, '…' ) ),
-		) );
-		?>
+		<?php trrol_breadcrumbs(); ?>
 
 		<div class="entry-layout">
 			<article>

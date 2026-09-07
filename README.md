@@ -73,6 +73,41 @@ Wszystko z poziomu kokpitu WordPressa, bez kodu:
 Gdy nie ma żadnych lokali lub zleceń, strona pokazuje zaprojektowany stan pusty
 z zachętą do kontaktu — nie wygląda na niedokończoną.
 
+## SEO
+
+Wszystko w motywie (`inc/seo.php`), bez wtyczki — nie ma czego aktualizować ani opłacać.
+
+**Znaczniki i treść.** Tytuły i opisy pisane pod frazy lokalne (zarządzanie nieruchomościami
+Siemianowice Śląskie, administracja kamienic, wolne lokale), osobne dla każdego typu widoku.
+Przy każdym wpisie i stronie jest metaboks „SEO — jak wpis wygląda w Google", gdzie można
+nadpisać tytuł i opis; puste pola = tekst generowany z tytułu i zajawki. Do tego canonical,
+`meta robots`, Open Graph i karty Twittera z obrazkiem 1200×630 (`assets/img/og-trrol.png`,
+generowany skryptem `build-og.js`).
+
+**Dane strukturalne** (JSON-LD, jeden graf na stronę):
+
+| Typ | Gdzie |
+| --- | --- |
+| `RealEstateAgent` | wszędzie — NAP, NIP, godziny otwarcia, punkty kontaktowe, obszar działania |
+| `WebSite`, `WebPage` | wszędzie |
+| `BreadcrumbList` | podstrony i wpisy — zgodny z okruszkami widocznymi na stronie |
+| `FAQPage` | strona główna, z sekcji najczęstszych pytań |
+| `Article` | aktualności i ogłoszenia |
+| `Place` / `Apartment` + `Offer` | wolne lokale, z powierzchnią jako `floorSize` |
+
+**Techniczne.** Mapa strony `wp-sitemap.xml` (poprawiony status 200, bez listy autorów),
+własny `robots.txt`, przekierowania 301 z 24 adresów starej strony (`/administracja.html`,
+`/budownictwo_*.html`, stare PDF-y, katalog `/referencje/`), przekierowanie stron załączników
+na plik, czyste adresy wpisów (`m²` w tytule nie robi już `%c2%b2` w URL-u).
+
+**Szybkość.** Krój Manrope hostowany lokalnie (40 KB, font zmienny, dwa subsety) — zero zapytań
+do Google Fonts. Wyłączone nieużywane style bloków Gutenberga, globalne style i emoji.
+Wstępne wczytywanie fontu i zdjęcia głównego, wymiary przy obrazkach (brak przeskoków układu),
+mapa Google ładowana dopiero przy przewinięciu. HTML strony głównej waży ok. 39 KB.
+
+**Do zrobienia po stronie klienta:** dodanie serwisu w Google Search Console (kod weryfikacyjny
+wkleja się w *Ustawienia TRROL*), zgłoszenie mapy strony i podpięcie wizytówki Google.
+
 ## Regulaminy
 
 Źródło: `.docx` od klientki. `build-regulaminy.js` zamienia je na HTML (paragrafy §,

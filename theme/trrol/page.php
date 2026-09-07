@@ -17,7 +17,7 @@ while ( have_posts() ) :
 	<main>
 		<section class="container section--first section--last">
 			<?php if ( ! is_front_page() ) : ?>
-				<?php trrol_breadcrumbs( array( array( 'label' => get_the_title() ) ) ); ?>
+				<?php trrol_breadcrumbs(); ?>
 			<?php endif; ?>
 
 			<h1 class="h-page" style="margin-top:24px"><?php the_title(); ?></h1>

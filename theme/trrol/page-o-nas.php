@@ -25,7 +25,7 @@ $rok = trrol_opt( 'rok_zalozenia' );
 			<?php if ( has_post_thumbnail() ) : ?>
 				<?php the_post_thumbnail( 'trrol-hero', array( 'alt' => 'Elewacja budynku w zarządzie od strony ulicy' ) ); ?>
 			<?php else : ?>
-				<img src="<?php echo esc_url( trrol_img( 'budynek-2.jpg' ) ); ?>" alt="Elewacja budynku w zarządzie od strony ulicy">
+				<img src="<?php echo esc_url( trrol_img( 'budynek-2.jpg' ) ); ?>" alt="Elewacja budynku w zarządzie od strony ulicy" width="1448" height="772" loading="lazy" decoding="async">
 			<?php endif; ?>
 		</div>
 	</section>

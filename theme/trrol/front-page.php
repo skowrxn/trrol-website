@@ -21,7 +21,7 @@ $trrol_aktualnosc = get_posts( array( 'post_type' => 'post', 'posts_per_page' =>
 
 	<section class="hero">
 		<div class="hero__media">
-			<img src="<?php echo esc_url( trrol_img( 'budynek-1.jpg' ) ); ?>" alt="Budynek mieszkalny po termomodernizacji, ujęcie z ulicy" fetchpriority="high">
+			<img src="<?php echo esc_url( trrol_img( 'budynek-1.jpg' ) ); ?>" alt="Budynek mieszkalny po termomodernizacji, ujęcie z ulicy" width="1448" height="772" fetchpriority="high" decoding="async">
 		</div>
 		<div class="hero__scrim"></div>
 		<div class="hero__inner">
@@ -138,7 +138,7 @@ $trrol_aktualnosc = get_posts( array( 'post_type' => 'post', 'posts_per_page' =>
 	<section class="container section">
 		<div class="about-split">
 			<div class="about-split__media">
-				<img src="<?php echo esc_url( trrol_img( 'budynek-2.jpg' ) ); ?>" alt="Elewacja budynku w zarządzie od strony ulicy" loading="lazy">
+				<img src="<?php echo esc_url( trrol_img( 'budynek-2.jpg' ) ); ?>" alt="Elewacja budynku w zarządzie od strony ulicy" width="1448" height="772" loading="lazy" decoding="async">
 			</div>
 			<div class="about-split__body">
 				<h2 class="h-section">O nas</h2>

@@ -192,9 +192,20 @@ function trrol_render_related_card( $post = null ) {
 /**
  * Okruszki nawigacyjne.
  *
- * @param array<int,array{label:string,url?:string}> $items Elementy.
+ * Bez argumentu buduje ścieżkę z bieżącego widoku — tę samą, którą motyw
+ * zgłasza wyszukiwarkom jako BreadcrumbList, więc obie wersje się nie rozjeżdżają.
+ *
+ * @param array<int,array{label:string,url?:string}>|null $items Własne elementy.
  */
-function trrol_breadcrumbs( $items ) {
+function trrol_breadcrumbs( $items = null ) {
+	if ( null === $items ) {
+		$items = trrol_breadcrumb_items();
+		array_shift( $items ); // „Strona główna" dodajemy poniżej.
+		if ( $items ) {
+			$items[ count( $items ) - 1 ]['url'] = '';
+		}
+	}
+
 	echo '<nav class="breadcrumbs" aria-label="Ścieżka nawigacji">';
 	echo '<a href="' . esc_url( home_url( '/' ) ) . '">Strona główna</a>';
 	foreach ( $items as $item ) {
@@ -364,11 +375,11 @@ function trrol_faq_items() {
 	return array(
 		array(
 			'q' => 'Jak zgłosić awarię w lokalu lub w częściach wspólnych?',
-			'a' => sprintf( 'Awarie zgłaszaj telefonicznie do administracji w godzinach pracy biura (%s) lub mailowo na %s. W przypadku awarii zagrażających bezpieczeństwu, np. zalania lub braku prądu, kontaktuj się z nami niezwłocznie.', $tel, $mail ),
+			'a' => sprintf( 'Awarie zgłaszaj telefonicznie do administracji w godzinach pracy biura, tel. %s, lub mailowo na %s. W przypadku awarii zagrażających bezpieczeństwu, np. zalania lub braku prądu, kontaktuj się z nami niezwłocznie.', $tel, $mail ),
 		),
 		array(
 			'q' => 'Gdzie sprawdzę wysokość czynszu i saldo płatności?',
-			'a' => sprintf( 'Informacje o naliczeniach i saldzie uzyskasz w dziale czynszów, telefonicznie lub osobiście w biurze przy %s.', trrol_opt( 'ulica' ) ),
+			'a' => sprintf( 'Informacje o naliczeniach i saldzie uzyskasz w dziale czynszów — telefonicznie pod numerem %s lub osobiście w naszym biurze (%s).', trrol_opt( 'tel_ksiegowosc' ), trrol_opt( 'ulica' ) ),
 		),
 		array(
 			'q' => 'Jak przekazać stan licznika wody?',

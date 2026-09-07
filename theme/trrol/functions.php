@@ -15,6 +15,7 @@ require_once get_theme_file_path( 'inc/settings.php' );
 require_once get_theme_file_path( 'inc/cpt.php' );
 require_once get_theme_file_path( 'inc/template-tags.php' );
 require_once get_theme_file_path( 'inc/forms.php' );
+require_once get_theme_file_path( 'inc/seo.php' );
 
 /**
  * Konfiguracja motywu.
@@ -50,27 +51,26 @@ add_action( 'after_setup_theme', 'trrol_setup' );
  * Style i skrypty.
  */
 function trrol_assets() {
-	wp_enqueue_style(
-		'trrol-fonts',
-		'https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap',
-		array(),
-		null
-	);
-	wp_enqueue_style( 'trrol-main', get_theme_file_uri( 'assets/css/main.css' ), array(), TRROL_VERSION );
+	wp_enqueue_style( 'trrol-fonts', get_theme_file_uri( 'assets/fonts/manrope.css' ), array(), TRROL_VERSION );
+	wp_enqueue_style( 'trrol-main', get_theme_file_uri( 'assets/css/main.css' ), array( 'trrol-fonts' ), TRROL_VERSION );
 	wp_enqueue_script( 'trrol-main', get_theme_file_uri( 'assets/js/main.js' ), array(), TRROL_VERSION, true );
 }
 add_action( 'wp_enqueue_scripts', 'trrol_assets' );
 
 /**
- * Preconnect do Google Fonts.
+ * Krój pisma hostujemy u siebie, więc ładujemy go możliwie wcześnie.
  */
-function trrol_resource_hints( $urls, $relation ) {
-	if ( 'preconnect' === $relation ) {
-		$urls[] = array( 'href' => 'https://fonts.gstatic.com', 'crossorigin' => '' );
-	}
-	return $urls;
+function trrol_preload_font() {
+	printf(
+		'<link rel="preload" as="font" type="font/woff2" href="%s" crossorigin>' . "\n",
+		esc_url( get_theme_file_uri( 'assets/fonts/manrope-latin.woff2' ) )
+	);
+	printf(
+		'<link rel="preload" as="font" type="font/woff2" href="%s" crossorigin>' . "\n",
+		esc_url( get_theme_file_uri( 'assets/fonts/manrope-latin-ext.woff2' ) )
+	);
 }
-add_filter( 'wp_resource_hints', 'trrol_resource_hints', 10, 2 );
+add_action( 'wp_head', 'trrol_preload_font', 1 );
 
 /**
  * Długość skrótu wpisu.
