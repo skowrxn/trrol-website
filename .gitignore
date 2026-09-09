@@ -8,3 +8,6 @@ guide/prepared/
 guide/podglad/
 guide/server.log
 guide/poradnik.html
+
+# zrzuty do poradnika są materiałem źródłowym — trzymamy je w repo
+!guide/shots/
