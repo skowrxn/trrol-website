@@ -1,0 +1,9 @@
+{
+ "items": [
+  { "sel": "#user_login", "num": 1, "side": "right", "pad": 5 },
+  { "sel": "#user_pass",  "num": 2, "side": "right", "pad": 5 },
+  { "sel": "#rememberme", "num": 3, "side": "right", "pad": 7 },
+  { "sel": "#wp-submit",  "num": 4, "side": "right", "pad": 5 },
+  { "sel": ".login #nav a", "num": 5, "side": "right", "pad": 5 }
+ ]
+}

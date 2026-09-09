@@ -3,3 +3,8 @@ backup/
 src/
 shots/
 node_modules/
+guide/raw/
+guide/prepared/
+guide/podglad/
+guide/server.log
+guide/poradnik.html
