@@ -4,7 +4,7 @@
  * Eksportuje funkcję, która przyjmuje narzędzia do składania rysunków
  * i zwraca listę stron (sekcji) dokumentu.
  */
-module.exports = function tresc({ rysunek, rysunekDwuczesciowy, logo }) {
+module.exports = function tresc({ rysunek, rysunekDwuczesciowy, logo, dostep }) {
   /**
    * Objaśnienia do znaczników na zrzucie.
    * Pozycja może być tekstem (numer kolejny) albo parą [numer, tekst],
@@ -121,6 +121,13 @@ module.exports = function tresc({ rysunek, rysunekDwuczesciowy, logo }) {
     '<strong>Zaloguj się</strong> — przejście do panelu.',
     '<strong>Nie pamiętasz hasła?</strong> — po podaniu adresu e-mail system wysyła wiadomość z odnośnikiem do ustawienia nowego hasła.',
   ])}
+
+  ${dostep ? `<h3>Dane dostępowe</h3>
+  <table class="tab tab--dostep">
+    <tr><th>Adres panelu</th><td><code>trrol.pl/wp-admin</code></td></tr>
+    <tr><th>Nazwa użytkownika</th><td><code>${dostep.login}</code></td></tr>
+    <tr><th>Hasło</th><td><code>${dostep.haslo}</code></td></tr>
+  </table>` : ''}
 
   ${info(`Po dłuższym okresie bezczynności sesja wygasa i system prosi o ponowne zalogowanie.`)}
 

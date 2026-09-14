@@ -11,3 +11,6 @@ guide/poradnik.html
 
 # zrzuty do poradnika są materiałem źródłowym — trzymamy je w repo
 !guide/shots/
+
+# PDF poradnika zawiera dane logowania — generowany lokalnie, nie trafia do repo
+guide/TRROL-poradnik-obslugi-strony.pdf

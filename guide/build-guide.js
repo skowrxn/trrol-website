@@ -64,7 +64,18 @@ function rysunekDwuczesciowy(nazwa, podpis, crop, targetW) {
 </figure>`;
 }
 
+/* Dane logowania czytane z credentials.txt (plik poza repozytorium). */
+function daneDostepu() {
+  const plik = path.join(__dirname, '..', 'credentials.txt');
+  if (!fs.existsSync(plik)) return null;
+  const blok = fs.readFileSync(plik, 'utf8').split(/^WORDPRESS/m)[1] || '';
+  const login = (blok.match(/login:\s*(\S+)/) || [])[1];
+  const haslo = (blok.match(/hasło:\s*(\S+)/) || [])[1];
+  return login && haslo ? { login, haslo } : null;
+}
+
 const strony = require('./content.js')({
+  dostep: daneDostepu(),
   rysunek,
   rysunekDwuczesciowy,
   logo: b64(path.join(IMG, 'logo-white.png')),
