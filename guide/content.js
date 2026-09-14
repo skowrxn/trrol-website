@@ -57,13 +57,14 @@ module.exports = function tresc({ rysunek, rysunekDwuczesciowy, logo, dostep }) 
     <li><span>Oferty dla firm</span><em>10</em></li>
     <li><span>Ogłoszenia dla mieszkańców</span><em>11</em></li>
     <li><span>Aktualności</span><em>12</em></li>
-    <li><span>Zdjęcia i pliki PDF</span><em>13</em></li>
-    <li><span>Strony stałe</span><em>14</em></li>
-    <li><span>Ustawienia TRROL — dane firmy i kontakt</span><em>15</em></li>
-    <li><span>Ustawienia TRROL — godziny, dokumenty, Google</span><em>16</em></li>
-    <li><span>Publikowanie i wycofywanie wpisów</span><em>17</em></li>
-    <li><span>Najczęstsze problemy</span><em>18</em></li>
-    <li><span>Zestawienie najważniejszych czynności</span><em>19</em></li>
+    <li><span>Dokumenty do pobrania</span><em>13</em></li>
+    <li><span>Zdjęcia i pliki</span><em>14</em></li>
+    <li><span>Strony stałe</span><em>15</em></li>
+    <li><span>Ustawienia TRROL — telefony i opisy działów</span><em>16</em></li>
+    <li><span>Ustawienia TRROL — dyżur awaryjny i godziny otwarcia</span><em>17</em></li>
+    <li><span>Publikowanie i wycofywanie wpisów</span><em>18</em></li>
+    <li><span>Najczęstsze problemy</span><em>19</em></li>
+    <li><span>Zestawienie najważniejszych czynności</span><em>20</em></li>
   </ol>
 </section>`);
 
@@ -130,8 +131,6 @@ module.exports = function tresc({ rysunek, rysunekDwuczesciowy, logo, dostep }) 
   </table>` : ''}
 
   ${info(`Po dłuższym okresie bezczynności sesja wygasa i system prosi o ponowne zalogowanie.`)}
-
-  ${info(`Adres panelu warto dodać do zakładek przeglądarki.`)}
 </section>`);
 
   /* 3. Kokpit */
@@ -149,10 +148,11 @@ module.exports = function tresc({ rysunek, rysunekDwuczesciowy, logo, dostep }) 
     '<strong>Wolne lokale</strong> — wykaz mieszkań i lokali użytkowych do wynajęcia.',
     '<strong>Oferty dla firm</strong> — zapytania ofertowe na prace remontowe.',
     '<strong>Ogłoszenia</strong> — komunikaty dla mieszkańców.',
+    '<strong>Dokumenty</strong> — pliki w zakładce „Dokumenty do pobrania”: druki, wnioski, informacje dla najemców.',
     '<strong>Wpisy</strong> — aktualności publikowane w serwisie.',
     '<strong>Strony</strong> — podstrony stałe, m.in. „O nas”, „Kontakt”, regulaminy.',
-    '<strong>Media</strong> — biblioteka zdjęć i plików PDF.',
-    '<strong>Ustawienia TRROL</strong> — dane kontaktowe, godziny otwarcia, dokumenty.',
+    '<strong>Media</strong> — biblioteka wszystkich zdjęć i plików.',
+    '<strong>Ustawienia TRROL</strong> — telefony działów, dyżur awaryjny, godziny otwarcia, pliki regulaminów.',
     '<strong>Nazwa serwisu</strong> — otwiera stronę publiczną.',
     '<strong>TRROL — jak zarządzać stroną</strong> — skrót do najczęściej używanych sekcji.',
   ])}
@@ -192,6 +192,10 @@ module.exports = function tresc({ rysunek, rysunekDwuczesciowy, logo, dostep }) 
       </tr>
     </tbody>
   </table>
+
+  <p>Osobną sekcją są <strong>Dokumenty</strong> — pliki udostępniane w zakładce „Dokumenty do
+  pobrania”, np. druki i wnioski (zob. rozdział 11). Regulaminy nie należą do tej sekcji — ich
+  pliki ustawia się w Ustawieniach TRROL (zob. rozdział 12).</p>
 
   <h3>Wyświetlanie wpisów</h3>
   <p>Opublikowany wpis automatycznie pojawia się na odpowiedniej podstronie oraz na stronie głównej.
@@ -355,20 +359,51 @@ module.exports = function tresc({ rysunek, rysunekDwuczesciowy, logo, dostep }) 
   ])}
 </section>`);
 
-  /* 11. Media */
+  /* 11. Dokumenty */
   s.push(`
 <section>
   <p class="nr-dzialu">Rozdział 11</p>
-  <h2 class="tytul-dzialu">Zdjęcia i pliki PDF</h2>
+  <h2 class="tytul-dzialu">Dokumenty do pobrania</h2>
 
-  <p>Sekcja <strong>Media</strong> zawiera wszystkie pliki wgrane do serwisu. Raz wgrany plik może
-  być wykorzystany w wielu miejscach.</p>
+  <p>Sekcja <strong>Dokumenty</strong> służy do udostępniania plików w zakładce „Dokumenty do
+  pobrania”, np. druków, wniosków i informacji dla najemców. Każdy dokument ma nazwę i plik, który
+  odwiedzający pobiera jednym kliknięciem.</p>
+
+  <p>Nowy dokument dodaje się przez <strong>Dokumenty → Dodaj dokument do pobrania</strong>.</p>
+
+  ${rysunek('nowy-dokument', 'Dodawanie dokumentu do pobrania', { x: 0, y: 30, w: 1600, h: 520 })}
+
+  ${legenda([
+    '<strong>Nazwa dokumentu</strong> — wyświetlana na stronie, np. <em>Wniosek o wymianę wodomierza</em>.',
+    '<strong>Wybierz plik</strong> — otwiera okno, w którym można wgrać plik z komputera (zakładka „Prześlij pliki”) lub wybrać plik z biblioteki mediów, a następnie kliknąć „Użyj tego pliku”. Po wybraniu widoczne są nazwa, format i rozmiar pliku.',
+    '<strong>Opis</strong> — opcjonalny tekst wyświetlany pod nazwą dokumentu.',
+    '<strong>Kolejność</strong> — dokumenty z niższą liczbą wyświetlane są wyżej na liście.',
+    '<strong>Opublikuj</strong> — zapisuje dokument i udostępnia go na stronie.',
+  ])}
+
+  <h3>Zmiana pliku lub usunięcie dokumentu</h3>
+  <p>Aby zastąpić plik nowszą wersją, należy otworzyć dokument, kliknąć <strong>Zmień plik</strong>,
+  wskazać nowy plik i kliknąć <strong>Aktualizuj</strong>. Dokument usuwa się odnośnikiem
+  <strong>Przenieś do kosza</strong> na liście dokumentów.</p>
+
+  ${info(`Dokument bez wybranego pliku nie jest wyświetlany na stronie. Na liście dokumentów
+  w panelu oznaczony jest napisem „brak pliku”.`)}
+</section>`);
+
+  /* 12. Media */
+  s.push(`
+<section>
+  <p class="nr-dzialu">Rozdział 12</p>
+  <h2 class="tytul-dzialu">Zdjęcia i pliki</h2>
+
+  <p>Sekcja <strong>Media</strong> zawiera wszystkie pliki wgrane do serwisu: zdjęcia oraz pliki
+  dokumentów. Raz wgrany plik może być wykorzystany w wielu miejscach.</p>
 
   ${rysunek('media', 'Biblioteka mediów', { x: 0, y: 0, w: 1600, h: 700 })}
 
   ${legenda([
     '<strong>Dodaj plik multimedialny</strong> — wgranie pliku przez przeciągnięcie go do okna lub wybór z dysku.',
-    '<strong>Lista plików</strong> — kliknięcie nazwy wyświetla szczegóły pliku, w tym jego adres.',
+    '<strong>Lista plików</strong> — kliknięcie nazwy wyświetla szczegóły pliku.',
   ])}
 
   <h3>Zalecenia dotyczące zdjęć</h3>
@@ -382,15 +417,18 @@ module.exports = function tresc({ rysunek, rysunekDwuczesciowy, logo, dostep }) 
   <ol class="kroki">
     <li>Wgrać nowy plik PDF w sekcji <strong>Media</strong>.</li>
     <li>Otworzyć szczegóły pliku i skopiować jego adres.</li>
-    <li>Wkleić adres w <strong>Ustawieniach TRROL</strong>, w polu „PDF — Regulamin użytkowania lokali”.</li>
-    <li>Zapisać zmiany.</li>
+    <li>Wkleić adres w <strong>Ustawieniach TRROL</strong>, w polu „PDF — Regulamin użytkowania lokali i porządku domowego” lub „PDF — Rozliczanie wody i ścieków”.</li>
+    <li>Kliknąć <strong>Zapisz zmiany</strong>.</li>
   </ol>
+
+  ${info(`Samo wgranie pliku do biblioteki mediów nie udostępnia go na stronie. Pliki dla
+  zakładki „Dokumenty do pobrania” dodaje się w sekcji <strong>Dokumenty</strong> (rozdział 11).`)}
 </section>`);
 
-  /* 12. Strony */
+  /* 13. Strony */
   s.push(`
 <section>
-  <p class="nr-dzialu">Rozdział 12</p>
+  <p class="nr-dzialu">Rozdział 13</p>
   <h2 class="tytul-dzialu">Strony stałe</h2>
 
   <p>Strony stałe to podstrony o niezmiennym charakterze, w odróżnieniu od wpisów, które są
@@ -400,7 +438,7 @@ module.exports = function tresc({ rysunek, rysunekDwuczesciowy, logo, dostep }) 
 
   ${legenda([
     '<strong>O nas</strong> — opis firmy. Treść edytuje się tak samo jak treść wpisu.',
-    '<strong>Kontakt</strong> — numery telefonów, godziny otwarcia i mapa pobierane są z <strong>Ustawień TRROL</strong> i tam należy je zmieniać.',
+    '<strong>Kontakt</strong> — numery telefonów, opisy działów, dyżur awaryjny, godziny otwarcia i mapa pobierane są z <strong>Ustawień TRROL</strong> i tam należy je zmieniać.',
     '<strong>Polityka prywatności</strong> — dokument wymagany przepisami. Zmiany powinny być konsultowane z osobą odpowiedzialną za ochronę danych osobowych.',
   ])}
 
@@ -408,61 +446,66 @@ module.exports = function tresc({ rysunek, rysunekDwuczesciowy, logo, dostep }) 
   prywatności”. Odnośniki do tych stron znajdują się w wielu miejscach serwisu.`)}
 
   <h3>Regulaminy</h3>
-  <p>Strona „Regulaminy” zawiera dwie podstrony: regulamin użytkowania lokali oraz regulamin
-  rozliczania wody i ścieków. Każdy dokument dostępny jest do przeczytania na stronie i do pobrania
-  w formacie PDF. Przy zmianie regulaminu należy zaktualizować zarówno treść podstrony, jak i plik PDF.</p>
+  <p>Strona „Regulaminy” zawiera dwie podstrony: <em>Regulamin użytkowania lokali i porządku
+  domowego</em> oraz regulamin rozliczania wody i ścieków. Pliki PDF regulaminów, dostępne na stronie
+  głównej i na stronie „Regulaminy”, ustawia się w <strong>Ustawieniach TRROL</strong>. Przy zmianie
+  regulaminu należy zaktualizować zarówno treść podstrony, jak i plik PDF (zob. rozdział 12).</p>
 </section>`);
 
-  /* 13. Ustawienia — cz. 1 */
-  s.push(`
-<section>
-  <p class="nr-dzialu">Rozdział 13</p>
-  <h2 class="tytul-dzialu">Ustawienia TRROL — dane firmy i kontakt</h2>
-
-  <p>Dane wprowadzone w tej sekcji wyświetlane są w całym serwisie: w nagłówku, stopce, na stronie
-  kontaktowej i przy wpisach. Zmiana wprowadzona w jednym miejscu jest widoczna na wszystkich
-  podstronach.</p>
-
-  ${rysunek('ustawienia', 'Ustawienia TRROL — dane spółki i kontakt', { x: 160, y: 30, w: 1440, h: 1240 })}
-
-  ${legenda([
-    '<strong>Nazwa spółki</strong> — pełna nazwa wyświetlana w stopce i w klauzuli zgody na przetwarzanie danych.',
-    '<strong>Telefon — sekretariat</strong> — numer wyświetlany w nagłówku strony.',
-    '<strong>E-mail publiczny</strong> — adres wyświetlany odwiedzającym.',
-    '<strong>E-mail dla formularzy</strong> — adres, na który przesyłane są wiadomości z formularzy kontaktowych i ofertowych.',
-  ])}
-
-  ${uwaga(`Zmiany zostają zapisane dopiero po kliknięciu przycisku <strong>Zapisz zmiany</strong>
-  na dole strony.`)}
-</section>`);
-
-  /* 14. Ustawienia — cz. 2 */
+  /* 14. Ustawienia — cz. 1 */
   s.push(`
 <section>
   <p class="nr-dzialu">Rozdział 14</p>
-  <h2 class="tytul-dzialu">Ustawienia TRROL — godziny, dokumenty, Google</h2>
+  <h2 class="tytul-dzialu">Ustawienia TRROL — telefony i opisy działów</h2>
 
-  ${rysunek('ustawienia-1240', 'Ustawienia TRROL — dalsza część', { x: 160, y: 32, w: 1440, h: 990 })}
+  <p>Dane wprowadzone w <strong>Ustawieniach TRROL</strong> wyświetlane są w całym serwisie:
+  w nagłówku, stopce, na stronie kontaktowej i przy wpisach.</p>
+
+  ${rysunek('ustawienia-650', 'Ustawienia TRROL — telefony i opisy działów', { x: 160, y: 32, w: 1440, h: 688 })}
 
   ${legenda([
-    [5, '<strong>Godziny otwarcia</strong> — w formacie <code>7:00–17:00</code>. Wyświetlane na stronie kontaktowej i stronie głównej oraz przekazywane wyszukiwarce Google.'],
-    '<strong>Sobota, niedziela</strong> — zazwyczaj „nieczynne”.',
-    '<strong>Adres osadzenia mapy</strong> — pole techniczne; zmiana wymagana wyłącznie przy zmianie adresu biura.',
-    '<strong>PDF — Regulamin użytkowania lokali</strong> — adres pliku PDF (zob. rozdział 11).',
-    '<strong>Opis strony głównej</strong> — tekst wyświetlany w wynikach wyszukiwania Google pod tytułem strony, maksymalnie ok. 155 znaków.',
-    '<strong>Kod weryfikacyjny Google</strong> — kod z usługi Google Search Console, potwierdzający własność serwisu.',
+    '<strong>Telefon — sekretariat</strong> — numer wyświetlany w nagłówku strony i na stronie kontaktowej.',
+    '<strong>Opis — sekretariat</strong> — tekst wyświetlany na stronie Kontakt pod numerem telefonu. Każdy dział ma własne pole opisu.',
+    '<strong>Telefon — dział administracji</strong> — pierwszy numer działu.',
+    '<strong>Drugi numer</strong> — opcjonalny. Pozostawione puste pole nie jest wyświetlane na stronie.',
+    '<strong>Opis — dział administracji</strong> — tekst pod numerami działu administracji.',
   ])}
 
-  <p>Po wprowadzeniu zmian należy kliknąć przycisk <strong>Zapisz zmiany</strong> na dole strony.</p>
+  <p>W ten sam sposób ustawia się numery i opisy kierownika administracji, działu technicznego
+  (dwa numery) oraz działu windykacji. Dział bez żadnego numeru nie jest wyświetlany na stronie.</p>
 
-  ${info(`Pozostałe pola sekcji SEO (wizytówka Google, profil na Facebooku, współrzędne biura)
-  są opcjonalne.`)}
+  ${uwaga(`Zmiany zostają zapisane dopiero po kliknięciu przycisku <strong>Zapisz zmiany</strong>
+  na dole strony ustawień.`)}
+</section>`);
+
+  /* 15. Ustawienia — cz. 2 */
+  s.push(`
+<section>
+  <p class="nr-dzialu">Rozdział 15</p>
+  <h2 class="tytul-dzialu">Ustawienia TRROL — dyżur awaryjny i godziny otwarcia</h2>
+
+  ${rysunek('ustawienia-1960', 'Ustawienia TRROL — dyżur awaryjny i godziny otwarcia', { x: 160, y: 32, w: 1440, h: 588 })}
+
+  ${legenda([
+    [6, '<strong>E-mail dla formularzy</strong> — adres, na który przesyłane są wiadomości z formularzy kontaktowych i ofertowych.'],
+    '<strong>Telefon dyżurny</strong> — numer do zgłaszania awarii poza godzinami pracy biura. Wyświetlany na stronie kontaktowej, przy godzinach otwarcia na stronie głównej i w stopce.',
+    '<strong>Osoba pełniąca dyżur</strong> — pole opcjonalne.',
+    '<strong>Kiedy obowiązuje dyżur</strong> — np. <em>od poniedziałku do piątku od godziny 15:00, w soboty, niedziele i święta całodobowo</em>.',
+    '<strong>Godziny otwarcia</strong> — w formacie <code>7:00–17:00</code>, osobno dla każdego dnia.',
+  ])}
+
+  ${uwaga(`Przy każdej zmianie dyżuru (numeru lub osoby) należy zaktualizować te pola.
+  Mieszkańcy dzwoniący poza godzinami pracy biura korzystają z numeru podanego na stronie.`)}
+
+  <p>Dalsza część ustawień obejmuje adres mapy, <strong>adresy plików PDF regulaminów</strong>
+  (zob. rozdział 12) oraz pola dotyczące wyszukiwarki Google. Pola dotyczące mapy i Google nie
+  wymagają zmian w codziennej pracy.</p>
 </section>`);
 
   /* 15. Publikowanie */
   s.push(`
 <section>
-  <p class="nr-dzialu">Rozdział 15</p>
+  <p class="nr-dzialu">Rozdział 16</p>
   <h2 class="tytul-dzialu">Publikowanie i wycofywanie wpisów</h2>
 
   <p>Każdy wpis ma jeden z dwóch statusów:</p>
@@ -501,7 +544,7 @@ module.exports = function tresc({ rysunek, rysunekDwuczesciowy, logo, dostep }) 
   /* 16. Problemy */
   s.push(`
 <section>
-  <p class="nr-dzialu">Rozdział 16</p>
+  <p class="nr-dzialu">Rozdział 17</p>
   <h2 class="tytul-dzialu">Najczęstsze problemy</h2>
 
   <dl class="faq">
@@ -550,8 +593,11 @@ module.exports = function tresc({ rysunek, rysunekDwuczesciowy, logo, dostep }) 
     <tr><th>Dodanie zlecenia dla firm</th><td>Oferty dla firm → Dodaj zlecenie → numer zlecenia i termin ofert → <strong>Opublikuj</strong></td></tr>
     <tr><th>Dodanie ogłoszenia</th><td>Ogłoszenia → Dodaj ogłoszenie → etykieta → <strong>Opublikuj</strong></td></tr>
     <tr><th>Dodanie aktualności</th><td>Wpisy → Dodaj wpis → obrazek wyróżniający i kategoria → <strong>Opublikuj</strong></td></tr>
-    <tr><th>Zmiana danych kontaktowych</th><td>Ustawienia TRROL → edycja pól → <strong>Zapisz zmiany</strong></td></tr>
+    <tr><th>Zmiana telefonów i opisów działów</th><td>Ustawienia TRROL → Kontakt → <strong>Zapisz zmiany</strong></td></tr>
     <tr><th>Aktualizacja regulaminu PDF</th><td>Media → wgranie pliku → skopiowanie adresu → Ustawienia TRROL → <strong>Zapisz zmiany</strong></td></tr>
+    <tr><th>Dodanie dokumentu do pobrania</th><td>Dokumenty → Dodaj dokument do pobrania → nazwa → Wybierz plik → <strong>Opublikuj</strong></td></tr>
+    <tr><th>Nowa wersja dokumentu</th><td>Dokumenty → edycja dokumentu → Zmień plik → <strong>Aktualizuj</strong></td></tr>
+    <tr><th>Zmiana dyżuru awaryjnego</th><td>Ustawienia TRROL → Zgłaszanie awarii poza godzinami pracy biura → <strong>Zapisz zmiany</strong></td></tr>
     <tr><th>Wycofanie wpisu</th><td>Edycja wpisu → Status → <strong>Szkic</strong></td></tr>
     <tr><th>Przywrócenie usuniętego wpisu</th><td>Lista wpisów → Kosz → Przywróć</td></tr>
     <tr><th>Odświeżenie strony</th><td><strong>Ctrl + F5</strong></td></tr>

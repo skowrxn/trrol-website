@@ -23,7 +23,13 @@ update_option( "trrol_options", array(
   "krs" => "0000349526",
   "tel_sekretariat" => "(32) 228-00-03",
   "tel_administracja" => "(32) 228-00-03",
-  "tel_ksiegowosc" => "(32) 228-00-03",
+  "tel_kierownik" => "(32) 228-00-03",
+  "tel_administracja_2" => "",
+  "tel_techniczny" => "",
+  "tel_techniczny_2" => "",
+  "awaria_tel" => "510-141-114",
+  "awaria_osoba" => "Przemysław Hrabia",
+  "awaria_kiedy" => "od poniedziałku do piątku od godziny 15:00, w soboty, niedziele i święta całodobowo",
   "tel_windykacja" => "(32) 228-00-03",
   "faks" => "(32) 220-45-69",
   "email" => "biuro@trrol.pl",
@@ -50,7 +56,7 @@ fi
 
 # ---------------------------------------------------------------- Regulaminy PDF
 say "Pliki PDF regulaminów"
-PDF1=$($WP media import /tmp/trrol-content/regulamin-uzytkowania-lokali.pdf --title="Regulamin użytkowania lokali" --porcelain)
+PDF1=$($WP media import /tmp/trrol-content/regulamin-uzytkowania-lokali.pdf --title="Regulamin użytkowania lokali i porządku domowego" --porcelain)
 PDF2=$($WP media import /tmp/trrol-content/rozliczanie-wody-i-sciekow.pdf --title="Regulamin rozliczania wody i ścieków" --porcelain)
 PDF1_URL=$($WP post get "$PDF1" --field=guid)
 PDF2_URL=$($WP post get "$PDF2" --field=guid)
@@ -94,7 +100,7 @@ ID_AKT=$(mkpage "aktualnosci" "Aktualności" /tmp/trrol-content/pusta.html | tai
 ID_PRIV=$(mkpage "polityka-prywatnosci" "Polityka prywatności" /tmp/trrol-content/polityka-prywatnosci.html | tail -1)
 
 ID_REG=$(mkpage "regulaminy" "Regulaminy" /tmp/trrol-content/pusta.html 0 "template-regulaminy.php" | tail -1)
-ID_REG1=$(mkpage "regulamin-uzytkowania-lokali" "Regulamin użytkowania lokali" /tmp/trrol-content/wp-regulamin-uzytkowania-lokali.html "$ID_REG" "template-regulaminy.php" | tail -1)
+ID_REG1=$(mkpage "regulamin-uzytkowania-lokali" "Regulamin użytkowania lokali i porządku domowego" /tmp/trrol-content/wp-regulamin-uzytkowania-lokali.html "$ID_REG" "template-regulaminy.php" | tail -1)
 ID_REG2=$(mkpage "rozliczanie-wody-i-sciekow" "Rozliczanie wody i ścieków" /tmp/trrol-content/wp-rozliczanie-wody-i-sciekow.html "$ID_REG" "template-regulaminy.php" | tail -1)
 
 $WP post update "$ID_REG1" --post_excerpt="Zasady korzystania z lokali i części wspólnych" --menu_order=1 >/dev/null

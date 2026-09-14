@@ -17,28 +17,35 @@ if ( have_posts() ) {
 
 $dzialy = array(
 	array(
-		'label' => 'Sekretariat',
-		'tel'   => trrol_opt( 'tel_sekretariat' ),
-		'faks'  => trrol_opt( 'faks' ),
-		'email' => trrol_opt( 'email' ),
-		'text'  => 'Korespondencja, umowy, sprawy ogólne i przekierowanie do właściwego działu.',
+		'label'  => 'Sekretariat',
+		'phones' => trrol_phones( array( 'tel_sekretariat' ) ),
+		'email'  => trrol_opt( 'email' ),
+		'text'   => trrol_opt_saved( 'opis_sekretariat' ),
 	),
 	array(
-		'label' => 'Dział administracji',
-		'tel'   => trrol_opt( 'tel_administracja' ),
-		'text'  => 'Zgłoszenia awarii i usterek, sprawy techniczne, wynajem wolnych lokali.',
+		'label'  => 'Kierownik administracji',
+		'phones' => trrol_phones( array( 'tel_kierownik' ) ),
+		'text'   => trrol_opt_saved( 'opis_kierownik' ),
 	),
 	array(
-		'label' => 'Główna księgowa',
-		'tel'   => trrol_opt( 'tel_ksiegowosc' ),
-		'text'  => 'Naliczenia, saldo płatności, rozliczenia mediów i odczyty liczników.',
+		'label'  => 'Dział administracji',
+		'phones' => trrol_phones( array( 'tel_administracja', 'tel_administracja_2' ) ),
+		'text'   => trrol_opt_saved( 'opis_administracja' ),
 	),
 	array(
-		'label' => 'Dział windykacji',
-		'tel'   => trrol_opt( 'tel_windykacja' ),
-		'text'  => 'Zaległości czynszowe, wezwania do zapłaty i ustalanie warunków spłaty.',
+		'label'  => 'Dział techniczny',
+		'phones' => trrol_phones( array( 'tel_techniczny', 'tel_techniczny_2' ) ),
+		'text'   => trrol_opt_saved( 'opis_techniczny' ),
+	),
+	array(
+		'label'  => 'Dział windykacji',
+		'phones' => trrol_phones( array( 'tel_windykacja' ) ),
+		'text'   => trrol_opt_saved( 'opis_windykacja' ),
 	),
 );
+
+$dzialy = array_values( array_filter( $dzialy, function ( $d ) { return ! empty( $d['phones'] ); } ) );
+$awaria = trrol_awaria();
 ?>
 
 <main>
@@ -49,16 +56,31 @@ $dzialy = array(
 			<?php foreach ( $dzialy as $dzial ) : ?>
 				<div class="contact-card">
 					<p class="contact-card__label"><?php echo esc_html( $dzial['label'] ); ?></p>
-					<a class="contact-card__phone" href="<?php echo esc_attr( trrol_tel_href( $dzial['tel'] ) ); ?>"><?php echo esc_html( $dzial['tel'] ); ?></a>
+					<p class="contact-card__phones"><?php echo trrol_phone_links( $dzial['phones'], 'contact-card__phone' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></p>
 					<?php if ( ! empty( $dzial['faks'] ) ) : ?>
 						<p class="contact-card__alt">faks <?php echo esc_html( $dzial['faks'] ); ?></p>
 					<?php endif; ?>
 					<?php if ( ! empty( $dzial['email'] ) ) : ?>
 						<a class="contact-card__mail" href="mailto:<?php echo esc_attr( $dzial['email'] ); ?>"><?php echo esc_html( $dzial['email'] ); ?></a>
 					<?php endif; ?>
-					<p class="contact-card__text"><?php echo esc_html( $dzial['text'] ); ?></p>
+					<?php if ( '' !== trim( $dzial['text'] ) ) : ?>
+						<p class="contact-card__text"><?php echo esc_html( $dzial['text'] ); ?></p>
+					<?php endif; ?>
 				</div>
 			<?php endforeach; ?>
+
+			<?php if ( $awaria ) : ?>
+				<div class="contact-card contact-card--awaria" id="awarie">
+					<p class="contact-card__label">Zgłaszanie awarii poza godzinami pracy biura</p>
+					<p class="contact-card__phones"><?php echo trrol_phone_links( array( $awaria['tel'] ), 'contact-card__phone' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></p>
+					<?php if ( $awaria['osoba'] ) : ?>
+						<p class="contact-card__alt">Dyżur pełni <?php echo esc_html( $awaria['osoba'] ); ?></p>
+					<?php endif; ?>
+					<?php if ( $awaria['kiedy'] ) : ?>
+						<p class="contact-card__text"><?php echo esc_html( trrol_ucfirst( $awaria['kiedy'] ) ); ?>.</p>
+					<?php endif; ?>
+				</div>
+			<?php endif; ?>
 		</div>
 	</section>
 
@@ -108,11 +130,22 @@ $dzialy = array(
 		<div class="emergency">
 			<div>
 				<p class="emergency__title">Awaria zagrażająca bezpieczeństwu?</p>
-				<p class="emergency__text">Zalanie, brak prądu, uszkodzenie instalacji gazowej — dzwoń do administracji niezwłocznie, nie czekaj na odpowiedź mailową.</p>
+				<p class="emergency__text">Zalanie, brak prądu, uszkodzenie instalacji gazowej — awarię należy zgłosić telefonicznie, bez oczekiwania na odpowiedź mailową.</p>
 			</div>
-			<div class="emergency__side">
-				<p class="emergency__label">Dział administracji</p>
-				<a class="emergency__phone" href="<?php echo esc_attr( trrol_tel_href( trrol_opt( 'tel_administracja' ) ) ); ?>"><?php echo esc_html( trrol_opt( 'tel_administracja' ) ); ?></a>
+			<div class="emergency__nums">
+				<div class="emergency__side">
+					<p class="emergency__label">W godzinach pracy biura</p>
+					<?php echo trrol_phone_links( trrol_phones( array( 'tel_techniczny', 'tel_administracja' ) ), 'emergency__phone', '' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+				</div>
+				<?php if ( $awaria ) : ?>
+					<div class="emergency__side">
+						<p class="emergency__label">Poza godzinami pracy biura</p>
+						<a class="emergency__phone" href="<?php echo esc_attr( trrol_tel_href( $awaria['tel'] ) ); ?>"><?php echo esc_html( $awaria['tel'] ); ?></a>
+						<?php if ( $awaria['osoba'] ) : ?>
+							<p class="emergency__who">dyżur: <?php echo esc_html( $awaria['osoba'] ); ?></p>
+						<?php endif; ?>
+					</div>
+				<?php endif; ?>
 			</div>
 		</div>
 	</section>

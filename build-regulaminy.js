@@ -10,7 +10,7 @@ const CONFIG = [
   {
     slug: 'regulamin-uzytkowania-lokali',
     src: 'regulamin-porzadek.txt',
-    title: 'Regulamin użytkowania lokali',
+    title: 'Regulamin użytkowania lokali i porządku domowego',
     subtitle: 'Regulamin porządku domowego w budynkach zarządzanych przez „TRROL” Nieruchomości Sp. z o.o.',
     note: '',
     skip: 5, // dane spółki + tytuł w pliku źródłowym

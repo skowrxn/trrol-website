@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $trrol_reg_page = get_page_by_path( 'regulaminy' );
 $trrol_reg_url  = $trrol_reg_page ? get_permalink( $trrol_reg_page ) : home_url( '/regulaminy/' );
-$trrol_pdf      = trrol_opt( 'pdf_regulamin' );
+$trrol_awaria   = trrol_awaria();
 
 $trrol_footer_cols = array(
 	'Firma' => array(
@@ -21,8 +21,9 @@ $trrol_footer_cols = array(
 	),
 	'Dla mieszkańców' => array(
 		array( 'label' => 'Ogłoszenia', 'url' => trrol_archive_url( 'trrol_ogloszenie' ) ),
-		array( 'label' => $trrol_pdf ? 'Regulamin używania lokali (PDF)' : 'Regulamin używania lokali', 'url' => $trrol_pdf ? $trrol_pdf : $trrol_reg_url ),
-		array( 'label' => 'Zgłoś awarię', 'url' => home_url( '/kontakt/' ) ),
+		array( 'label' => 'Regulaminy', 'url' => $trrol_reg_url ),
+		array( 'label' => 'Dokumenty do pobrania', 'url' => trrol_archive_url( 'trrol_dokument' ) ),
+		array( 'label' => 'Zgłoś awarię', 'url' => home_url( '/kontakt/#awarie' ) ),
 	),
 	'Dla firm' => array(
 		array( 'label' => 'Wolne lokale', 'url' => trrol_archive_url( 'trrol_lokal' ) ),
@@ -40,6 +41,10 @@ $trrol_footer_cols = array(
 					<img src="<?php echo esc_url( trrol_img( 'logo-white.png' ) ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>">
 				</a>
 				<p class="site-footer__addr"><?php echo esc_html( trrol_opt( 'ulica' ) . ', ' . trrol_opt( 'miasto' ) ); ?></p>
+				<p class="site-footer__addr">Biuro: <?php echo trrol_phone_links( trrol_phones( array( 'tel_sekretariat' ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?></p>
+				<?php if ( $trrol_awaria ) : ?>
+					<p class="site-footer__addr">Awarie poza godzinami pracy biura: <a class="site-footer__awaria" href="<?php echo esc_attr( trrol_tel_href( $trrol_awaria['tel'] ) ); ?>"><?php echo esc_html( $trrol_awaria['tel'] ); ?></a></p>
+				<?php endif; ?>
 			</div>
 
 			<div class="footer-cols">

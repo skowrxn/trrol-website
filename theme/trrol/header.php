@@ -64,6 +64,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					array( 'url' => trrol_archive_url( 'trrol_lokal' ), 'label' => 'Wolne lokale', 'current' => is_singular( 'trrol_lokal' ) || is_post_type_archive( 'trrol_lokal' ) ),
 					array( 'url' => trrol_archive_url( 'trrol_oferta' ), 'label' => 'Oferty dla firm', 'current' => is_singular( 'trrol_oferta' ) || is_post_type_archive( 'trrol_oferta' ) ),
 					array( 'url' => trrol_archive_url( 'trrol_ogloszenie' ), 'label' => 'Ogłoszenia', 'current' => is_singular( 'trrol_ogloszenie' ) || is_post_type_archive( 'trrol_ogloszenie' ) ),
+					array( 'url' => trrol_archive_url( 'trrol_dokument' ), 'label' => 'Dokumenty', 'current' => is_post_type_archive( 'trrol_dokument' ) ),
 					array( 'url' => trrol_archive_url( 'post' ), 'label' => 'Aktualności', 'current' => is_home() || is_singular( 'post' ) || is_category() ),
 					array( 'url' => home_url( '/o-nas/' ), 'label' => 'O nas', 'current' => is_page( 'o-nas' ) ),
 					array( 'url' => home_url( '/kontakt/' ), 'label' => 'Kontakt', 'current' => is_page( 'kontakt' ) ),

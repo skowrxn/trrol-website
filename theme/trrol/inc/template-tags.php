@@ -220,7 +220,76 @@ function trrol_breadcrumbs( $items = null ) {
 }
 
 /**
- * Tabela godzin otwarcia.
+ * Niepuste numery telefonów z podanych pól ustawień.
+ *
+ * Pola opcjonalne (np. drugi numer) nie mają wartości zastępczej —
+ * puste pole oznacza, że numer nie jest wyświetlany.
+ *
+ * @param string[] $keys Klucze ustawień.
+ * @return string[]
+ */
+function trrol_phones( $keys ) {
+	$saved = get_option( 'trrol_options', array() );
+	$out   = array();
+	foreach ( (array) $keys as $key ) {
+		$value = array_key_exists( $key, (array) $saved ) ? trim( (string) $saved[ $key ] ) : trim( trrol_opt( $key ) );
+		if ( '' !== $value && ! in_array( $value, $out, true ) ) {
+			$out[] = $value;
+		}
+	}
+	return $out;
+}
+
+/**
+ * Lista numerów jako odnośniki „tel:”.
+ *
+ * @param string[] $phones Numery.
+ * @param string   $class  Klasa odnośnika.
+ * @param string   $sep    Separator HTML.
+ * @return string
+ */
+function trrol_phone_links( $phones, $class = '', $sep = '<br>' ) {
+	$links = array();
+	foreach ( $phones as $phone ) {
+		$links[] = sprintf(
+			'<a%s href="%s">%s</a>',
+			$class ? ' class="' . esc_attr( $class ) . '"' : '',
+			esc_attr( trrol_tel_href( $phone ) ),
+			esc_html( $phone )
+		);
+	}
+	return implode( $sep, $links );
+}
+
+/**
+ * Dane dyżuru awaryjnego poza godzinami pracy biura.
+ *
+ * @return array{tel:string,osoba:string,kiedy:string}|null
+ */
+function trrol_awaria() {
+	$tel = implode( '', trrol_phones( array( 'awaria_tel' ) ) );
+	if ( '' === $tel ) {
+		return null;
+	}
+	return array(
+		'tel'   => $tel,
+		'osoba' => trim( trrol_opt( 'awaria_osoba' ) ),
+		'kiedy' => trim( trrol_opt( 'awaria_kiedy' ) ),
+	);
+}
+
+/**
+ * Pierwsza litera wielka (z obsługą polskich znaków).
+ *
+ * @param string $text Tekst.
+ * @return string
+ */
+function trrol_ucfirst( $text ) {
+	return mb_strtoupper( mb_substr( $text, 0, 1 ) ) . mb_substr( $text, 1 );
+}
+
+/**
+ * Tabela godzin otwarcia z informacją o dyżurze awaryjnym pod spodem.
  *
  * @param bool $large Większy wariant.
  */
@@ -232,6 +301,7 @@ function trrol_hours_table( $large = false ) {
 		'Czwartek'     => trrol_opt( 'godziny_cz' ),
 		'Piątek'       => trrol_opt( 'godziny_pt' ),
 	);
+	$awaria = trrol_awaria();
 	?>
 	<div class="hours<?php echo $large ? ' hours--lg' : ''; ?>">
 		<?php foreach ( $days as $day => $hours ) : ?>
@@ -239,11 +309,92 @@ function trrol_hours_table( $large = false ) {
 		<?php endforeach; ?>
 		<div class="hours__row hours__row--off"><span>Sobota, niedziela</span><span><?php echo esc_html( trrol_opt( 'godziny_weekend' ) ); ?></span></div>
 	</div>
+	<?php if ( $awaria ) : ?>
+		<div class="hours-awaria">
+			<p class="hours-awaria__title">Zgłaszanie awarii poza godzinami pracy biura</p>
+			<a class="hours-awaria__tel" href="<?php echo esc_attr( trrol_tel_href( $awaria['tel'] ) ); ?>"><?php echo esc_html( $awaria['tel'] ); ?></a>
+			<?php if ( $awaria['kiedy'] || $awaria['osoba'] ) : ?>
+				<p class="hours-awaria__text">
+					<?php echo $awaria['kiedy'] ? esc_html( trrol_ucfirst( $awaria['kiedy'] ) ) . '.' : ''; ?>
+					<?php echo $awaria['osoba'] ? 'Dyżur pełni ' . esc_html( $awaria['osoba'] ) . '.' : ''; ?>
+				</p>
+			<?php endif; ?>
+		</div>
+	<?php endif; ?>
 	<?php
 }
 
 /**
- * Ciemna karta z regulaminami do pobrania.
+ * Plik podpięty do dokumentu do pobrania.
+ *
+ * @param int $post_id ID dokumentu.
+ * @return array{url:string,ext:string,size:string,id:int}|null
+ */
+function trrol_document_file( $post_id ) {
+	$att = (int) get_post_meta( $post_id, '_trrol_plik', true );
+	if ( ! $att || 'attachment' !== get_post_type( $att ) ) {
+		return null;
+	}
+	$url = wp_get_attachment_url( $att );
+	if ( ! $url ) {
+		return null;
+	}
+	$path = get_attached_file( $att );
+	$ext  = strtoupper( pathinfo( $path ? $path : $url, PATHINFO_EXTENSION ) );
+	$size = ( $path && file_exists( $path ) ) ? size_format( filesize( $path ), 0 ) : '';
+
+	return array( 'url' => $url, 'ext' => $ext, 'size' => $size, 'id' => $att );
+}
+
+/**
+ * Opublikowane dokumenty do pobrania, które mają podpięty plik.
+ *
+ * @param int $limit Liczba dokumentów; -1 = wszystkie.
+ * @return array<int,array>
+ */
+function trrol_documents( $limit = -1 ) {
+	$posts = get_posts( array(
+		'post_type'      => 'trrol_dokument',
+		'posts_per_page' => -1,
+		'orderby'        => array( 'menu_order' => 'ASC', 'date' => 'DESC' ),
+	) );
+
+	$out = array();
+	foreach ( $posts as $post ) {
+		$file = trrol_document_file( $post->ID );
+		if ( ! $file ) {
+			continue;
+		}
+		$out[] = array_merge(
+			array(
+				'post' => $post,
+				'name' => get_the_title( $post ),
+				'opis' => (string) get_post_meta( $post->ID, '_trrol_opis', true ),
+			),
+			$file
+		);
+		if ( $limit > 0 && count( $out ) >= $limit ) {
+			break;
+		}
+	}
+	return $out;
+}
+
+/**
+ * Opis pliku: rozszerzenie i rozmiar, np. „PDF · 204 KB”.
+ *
+ * @param array $doc Dokument z trrol_documents().
+ * @return string
+ */
+function trrol_document_meta( $doc ) {
+	return implode( ' · ', array_filter( array( $doc['ext'], $doc['size'] ) ) );
+}
+
+/**
+ * Ciemna karta z regulaminami do pobrania (strona główna).
+ *
+ * Regulaminy są niezależne od sekcji „Dokumenty do pobrania” — pliki podaje się
+ * w Ustawieniach TRROL.
  */
 function trrol_docs_card() {
 	$reg_page = get_page_by_path( 'regulaminy' );
@@ -251,20 +402,20 @@ function trrol_docs_card() {
 
 	$docs = array(
 		array(
-			'name' => 'Regulamin użytkowania lokali',
-			'url'  => trrol_opt( 'pdf_regulamin' ) ? trrol_opt( 'pdf_regulamin' ) : $reg_url . '#regulamin-porzadkowy',
+			'name' => 'Regulamin użytkowania lokali i porządku domowego',
+			'url'  => trrol_opt( 'pdf_regulamin' ) ? trrol_opt( 'pdf_regulamin' ) : $reg_url,
 			'pdf'  => (bool) trrol_opt( 'pdf_regulamin' ),
 		),
 		array(
 			'name' => 'Rozliczanie wody i ścieków',
-			'url'  => trrol_opt( 'pdf_woda' ) ? trrol_opt( 'pdf_woda' ) : $reg_url . '#regulamin-wody',
+			'url'  => trrol_opt( 'pdf_woda' ) ? trrol_opt( 'pdf_woda' ) : $reg_url,
 			'pdf'  => (bool) trrol_opt( 'pdf_woda' ),
 		),
 	);
 	?>
 	<div class="docs-card">
-		<h2 class="docs-card__title">Regulamin używania lokali</h2>
-		<p class="docs-card__text">Obowiązki najemcy, zasady korzystania z części wspólnych i zgłaszania awarii.</p>
+		<h2 class="docs-card__title">Regulaminy</h2>
+		<p class="docs-card__text">Obowiązki najemcy, zasady korzystania z części wspólnych i rozliczania mediów.</p>
 		<div class="docs-card__list">
 			<?php foreach ( $docs as $doc ) : ?>
 				<a class="doc-link" href="<?php echo esc_url( $doc['url'] ); ?>"<?php echo $doc['pdf'] ? ' download' : ''; ?>>
@@ -327,6 +478,7 @@ function trrol_archive_label( $type ) {
 		'trrol_lokal'      => 'Wolne lokale',
 		'trrol_oferta'     => 'Oferty dla firm',
 		'trrol_ogloszenie' => 'Ogłoszenia',
+		'trrol_dokument'   => 'Dokumenty do pobrania',
 		'post'             => 'Aktualności',
 	);
 	return isset( $map[ $type ] ) ? $map[ $type ] : 'Wpisy';
@@ -364,6 +516,27 @@ function trrol_related_posts( $post, $limit = 2 ) {
 }
 
 /**
+ * Odpowiedź na pytanie o zgłaszanie awarii.
+ *
+ * @param string $tel  Telefon administracji.
+ * @param string $mail E-mail.
+ * @return string
+ */
+function trrol_faq_awaria( $tel, $mail ) {
+	$text   = sprintf( 'W godzinach pracy biura awarie zgłaszaj telefonicznie do administracji, tel. %s, lub mailowo na %s.', $tel, $mail );
+	$awaria = trrol_awaria();
+	if ( $awaria ) {
+		$text .= sprintf(
+			' Poza godzinami pracy biura awarie zgłaszaj pod numerem dyżurnym %s%s%s.',
+			$awaria['tel'],
+			$awaria['kiedy'] ? ' (' . $awaria['kiedy'] . ')' : '',
+			$awaria['osoba'] ? ' — dyżur pełni ' . $awaria['osoba'] : ''
+		);
+	}
+	return $text;
+}
+
+/**
  * Zestaw najczęstszych pytań na stronie głównej.
  *
  * @return array<int,array{q:string,a:string}>
@@ -375,11 +548,11 @@ function trrol_faq_items() {
 	return array(
 		array(
 			'q' => 'Jak zgłosić awarię w lokalu lub w częściach wspólnych?',
-			'a' => sprintf( 'Awarie zgłaszaj telefonicznie do administracji w godzinach pracy biura, tel. %s, lub mailowo na %s. W przypadku awarii zagrażających bezpieczeństwu, np. zalania lub braku prądu, kontaktuj się z nami niezwłocznie.', $tel, $mail ),
+			'a' => trrol_faq_awaria( $tel, $mail ),
 		),
 		array(
 			'q' => 'Gdzie sprawdzę wysokość czynszu i saldo płatności?',
-			'a' => sprintf( 'Informacje o naliczeniach i saldzie uzyskasz w dziale czynszów — telefonicznie pod numerem %s lub osobiście w naszym biurze (%s).', trrol_opt( 'tel_ksiegowosc' ), trrol_opt( 'ulica' ) ),
+			'a' => sprintf( 'Informacje o naliczeniach i saldzie uzyskasz w dziale czynszów — telefonicznie pod numerem %s lub osobiście w naszym biurze (%s).', trrol_opt( 'tel_administracja' ), trrol_opt( 'ulica' ) ),
 		),
 		array(
 			'q' => 'Jak przekazać stan licznika wody?',

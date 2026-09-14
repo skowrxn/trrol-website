@@ -9,12 +9,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TRROL_VERSION', '1.0.0' );
+define( 'TRROL_VERSION', '1.1.1' );
 
 require_once get_theme_file_path( 'inc/settings.php' );
 require_once get_theme_file_path( 'inc/cpt.php' );
 require_once get_theme_file_path( 'inc/template-tags.php' );
 require_once get_theme_file_path( 'inc/forms.php' );
+require_once get_theme_file_path( 'inc/documents.php' );
 require_once get_theme_file_path( 'inc/seo.php' );
 
 /**
@@ -175,7 +176,8 @@ function trrol_dashboard_widget() {
 			'Oferty dla firm' => array( 'edit.php?post_type=trrol_oferta', 'Zapytania ofertowe na prace remontowe. Ustaw numer zlecenia i termin składania ofert.' ),
 			'Ogłoszenia'      => array( 'edit.php?post_type=trrol_ogloszenie', 'Bieżące komunikaty dla mieszkańców — deratyzacja, odczyty liczników, prace w budynku.' ),
 			'Aktualności'     => array( 'edit.php', 'Blog firmowy — co się dzieje w firmie i na budynkach.' ),
-			'Ustawienia TRROL'=> array( 'admin.php?page=trrol-settings', 'Telefony, e-mail, adres, godziny otwarcia, mapa i pliki regulaminów.' ),
+			'Dokumenty'       => array( 'edit.php?post_type=trrol_dokument', 'Pliki w zakładce „Dokumenty do pobrania”: druki, wnioski, informacje dla najemców.' ),
+			'Ustawienia TRROL'=> array( 'admin.php?page=trrol-settings', 'Telefony działów, dyżur awaryjny, e-mail, adres, godziny otwarcia, pliki regulaminów.' ),
 		);
 		echo '<p style="margin-top:0">Treści na stronie dodajesz w tych miejscach:</p><ul style="margin:0">';
 		foreach ( $items as $label => $data ) {
@@ -201,6 +203,7 @@ add_filter( 'menu_order', function ( $menu ) {
 		'edit.php?post_type=trrol_lokal',
 		'edit.php?post_type=trrol_oferta',
 		'edit.php?post_type=trrol_ogloszenie',
+		'edit.php?post_type=trrol_dokument',
 		'edit.php',
 		'edit.php?post_type=page',
 		'upload.php',

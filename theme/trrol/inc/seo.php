@@ -38,6 +38,9 @@ function trrol_document_title( $parts ) {
 	if ( is_post_type_archive( 'trrol_oferta' ) ) {
 		return array( 'title' => sprintf( 'Oferty dla firm remontowych — zapytania ofertowe | %s', $brand ) );
 	}
+	if ( is_post_type_archive( 'trrol_dokument' ) ) {
+		return array( 'title' => sprintf( 'Dokumenty do pobrania — druki i wnioski dla najemców | %s', $brand ) );
+	}
 	if ( is_post_type_archive( 'trrol_ogloszenie' ) ) {
 		return array( 'title' => sprintf( 'Ogłoszenia dla mieszkańców | %s', $brand ) );
 	}
@@ -77,41 +80,45 @@ function trrol_meta_description() {
 		return $custom;
 	}
 
-	$city = 'Siemianowicach Śląskich';
+	$city  = 'Siemianowicach Śląskich';
+	$firma = trrol_opt( 'firma' );
 
 	if ( is_front_page() ) {
 		$default = sprintf(
-			'Kompleksowa administracja i zarządzanie nieruchomościami prywatnymi w %s — kamienice, budynki mieszkalne, nadzór techniczny i obsługa lokatorów. Od %s roku. Tel. %s.',
+			'%s — administracja i zarządzanie kamienicami i budynkami mieszkalnymi w %s. Tel. %s.',
+			$firma,
 			$city,
-			trrol_opt( 'rok_zalozenia' ),
 			trrol_opt( 'tel_sekretariat' )
 		);
 		return trrol_opt( 'seo_opis_home', $default );
 	}
 
 	if ( is_post_type_archive( 'trrol_lokal' ) ) {
-		return sprintf( 'Aktualny wykaz wolnych lokali mieszkalnych i użytkowych w %s. Warunki najmu ustalamy indywidualnie — zadzwoń %s lub napisz przez formularz.', $city, trrol_opt( 'tel_administracja' ) );
+		return sprintf( '%s — wolne lokale mieszkalne i użytkowe do wynajęcia w %s. Warunki najmu ustalane indywidualnie.', $firma, $city );
 	}
 	if ( is_post_type_archive( 'trrol_oferta' ) ) {
-		return 'Zapytania ofertowe na prace remontowe i konserwacyjne w budynkach, którymi zarządzamy. Złóż ofertę przez formularz przy wybranym zleceniu.';
+		return sprintf( '%s — zapytania ofertowe na prace remontowe i konserwacyjne w zarządzanych budynkach.', $firma );
+	}
+	if ( is_post_type_archive( 'trrol_dokument' ) ) {
+		return sprintf( '%s — druki, wnioski i informacje dla najemców do pobrania.', $firma );
 	}
 	if ( is_post_type_archive( 'trrol_ogloszenie' ) ) {
-		return 'Bieżące komunikaty administracji dla mieszkańców — terminy odczytów liczników, planowane prace w budynkach i sprawy porządkowe.';
+		return sprintf( '%s — ogłoszenia dla mieszkańców: odczyty liczników, planowane prace i sprawy porządkowe.', $firma );
 	}
 	if ( is_home() ) {
-		return 'Co się dzieje w firmie i na budynkach, którymi zarządzamy — remonty, inwestycje i sprawy administracyjne.';
+		return sprintf( '%s — aktualności: remonty, inwestycje i sprawy administracyjne w zarządzanych budynkach.', $firma );
 	}
 	if ( is_page( 'kontakt' ) ) {
 		return sprintf(
-			'Administracja, czynsze, windykacja i zgłoszenia awarii. %s, %s. Tel. %s, %s.',
+			'%s — kontakt z działami i zgłaszanie awarii. %s, %s, tel. %s.',
+			$firma,
 			trrol_opt( 'ulica' ),
-			trrol_opt( 'miasto' ),
-			trrol_opt( 'tel_sekretariat' ),
-			trrol_opt( 'email' )
+			trrol_postal_address()['addressLocality'],
+			trrol_opt( 'tel_sekretariat' )
 		);
 	}
 	if ( is_page( 'o-nas' ) ) {
-		return sprintf( 'Od %s r. zarządzamy kamienicami i budynkami mieszkalnymi stanowiącymi własność prywatną. Odciążamy właścicieli z codziennych obowiązków związanych z utrzymaniem nieruchomości.', trrol_opt( 'rok_zalozenia' ) );
+		return sprintf( '%s — od %s r. zarządzamy kamienicami i budynkami mieszkalnymi w %s.', $firma, trrol_opt( 'rok_zalozenia' ), $city );
 	}
 
 	if ( is_singular() ) {
@@ -122,10 +129,10 @@ function trrol_meta_description() {
 		if ( '' === $text ) {
 			/* Strony bez własnej treści (np. rozdzielacz regulaminów) opisujemy tytułem. */
 			$text = trrol_trim_description( sprintf(
-				'%s — %s, %s. Tel. %s.',
+				'%2$s — %1$s, %3$s. Tel. %4$s.',
 				get_the_title(),
 				trrol_opt( 'firma' ),
-				trrol_opt( 'miasto' ),
+				rtrim( trrol_opt( 'miasto' ), '.' ),
 				trrol_opt( 'tel_sekretariat' )
 			) );
 		}
@@ -479,21 +486,37 @@ function trrol_jsonld() {
 		$organization['sameAs'] = array_values( $profiles );
 	}
 
-	$organization['contactPoint'] = array(
-		array(
-			'@type'             => 'ContactPoint',
-			'contactType'       => 'Administracja i zgłoszenia awarii',
-			'telephone'         => trrol_opt( 'tel_administracja' ),
-			'email'             => trrol_opt( 'email' ),
-			'availableLanguage' => 'pl',
-		),
-		array(
-			'@type'             => 'ContactPoint',
-			'contactType'       => 'Czynsze i rozliczenia',
-			'telephone'         => trrol_opt( 'tel_ksiegowosc' ),
-			'availableLanguage' => 'pl',
-		),
+	$punkty = array(
+		'Sekretariat'             => array( 'tel_sekretariat' ),
+		'Kierownik administracji' => array( 'tel_kierownik' ),
+		'Dział administracji'     => array( 'tel_administracja', 'tel_administracja_2' ),
+		'Dział techniczny'        => array( 'tel_techniczny', 'tel_techniczny_2' ),
+		'Dział windykacji'        => array( 'tel_windykacja' ),
 	);
+
+	$organization['contactPoint'] = array();
+	foreach ( $punkty as $nazwa => $klucze ) {
+		foreach ( trrol_phones( $klucze ) as $numer ) {
+			$organization['contactPoint'][] = array(
+				'@type'             => 'ContactPoint',
+				'contactType'       => $nazwa,
+				'telephone'         => $numer,
+				'email'             => trrol_opt( 'email' ),
+				'availableLanguage' => 'pl',
+			);
+		}
+	}
+
+	$awaria = trrol_awaria();
+	if ( $awaria ) {
+		$organization['contactPoint'][] = array(
+			'@type'             => 'ContactPoint',
+			'contactType'       => 'Zgłaszanie awarii poza godzinami pracy biura',
+			'telephone'         => $awaria['tel'],
+			'description'       => $awaria['kiedy'],
+			'availableLanguage' => 'pl',
+		);
+	}
 
 	$graph = array(
 		$organization,

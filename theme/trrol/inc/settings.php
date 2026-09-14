@@ -23,9 +23,20 @@ function trrol_default_options() {
 		'regon'            => '241504484',
 		'krs'              => '0000349526',
 		'tel_sekretariat'  => '(32) 228-00-03',
+		'tel_kierownik'    => '(32) 228-00-03',
 		'tel_administracja'=> '(32) 228-00-03',
-		'tel_ksiegowosc'   => '(32) 228-00-03',
+		'tel_administracja_2' => '',
+		'tel_techniczny'   => '',
+		'tel_techniczny_2' => '',
 		'tel_windykacja'   => '(32) 228-00-03',
+		'opis_sekretariat' => 'Korespondencja, umowy, sprawy ogólne i przekierowanie do właściwego działu.',
+		'opis_kierownik' => 'Sprawy dotyczące zarządzania budynkami i najmu lokali.',
+		'opis_administracja' => 'Bieżące sprawy najemców, czynsze, rozliczenia mediów i wynajem wolnych lokali.',
+		'opis_techniczny' => 'Zgłoszenia awarii i usterek w godzinach pracy biura, sprawy techniczne budynków.',
+		'opis_windykacja' => 'Zaległości czynszowe, wezwania do zapłaty i ustalanie warunków spłaty.',
+		'awaria_tel'       => '510-141-114',
+		'awaria_osoba'     => 'Przemysław Hrabia',
+		'awaria_kiedy'     => 'od poniedziałku do piątku od godziny 15:00, w soboty, niedziele i święta całodobowo',
 		'faks'             => '(32) 220-45-69',
 		'email'            => 'biuro@trrol.pl',
 		'email_formularze' => 'biuro@trrol.pl',
@@ -63,6 +74,24 @@ function trrol_opt( $key, $default = '' ) {
 }
 
 /**
+ * Ustawienie w postaci zapisanej w kokpicie.
+ *
+ * W odróżnieniu od trrol_opt() nie podstawia wartości domyślnej, gdy pole
+ * zostało celowo wyczyszczone — np. usunięty opis działu ma zniknąć ze strony.
+ *
+ * @param string $key Klucz.
+ * @return string
+ */
+function trrol_opt_saved( $key ) {
+	$saved = get_option( 'trrol_options', array() );
+	if ( is_array( $saved ) && array_key_exists( $key, $saved ) ) {
+		return (string) $saved[ $key ];
+	}
+	$defaults = trrol_default_options();
+	return isset( $defaults[ $key ] ) ? $defaults[ $key ] : '';
+}
+
+/**
  * Telefon w formacie do atrybutu href="tel:".
  *
  * @param string $phone Numer.
@@ -93,13 +122,26 @@ function trrol_settings_groups() {
 			'rok_zalozenia' => array( 'label' => 'Działamy od roku' ),
 		),
 		'Kontakt' => array(
-			'tel_sekretariat'   => array( 'label' => 'Telefon — sekretariat' ),
-			'tel_administracja' => array( 'label' => 'Telefon — dział administracji' ),
-			'tel_ksiegowosc'    => array( 'label' => 'Telefon — główna księgowa' ),
-			'tel_windykacja'    => array( 'label' => 'Telefon — dział windykacji' ),
-			'faks'              => array( 'label' => 'Faks' ),
-			'email'             => array( 'label' => 'E-mail publiczny' ),
-			'email_formularze'  => array( 'label' => 'E-mail dla formularzy', 'hint' => 'Na ten adres trafiają wiadomości z formularzy na stronie.' ),
+			'tel_sekretariat'     => array( 'label' => 'Telefon — sekretariat' ),
+			'opis_sekretariat'    => array( 'label' => 'Opis — sekretariat', 'type' => 'textarea', 'hint' => 'Tekst wyświetlany na stronie Kontakt pod numerem telefonu.' ),
+			'tel_kierownik'       => array( 'label' => 'Telefon — kierownik administracji' ),
+			'opis_kierownik'      => array( 'label' => 'Opis — kierownik administracji', 'type' => 'textarea', 'hint' => 'Tekst wyświetlany na stronie Kontakt pod numerem telefonu.' ),
+			'tel_administracja'   => array( 'label' => 'Telefon — dział administracji' ),
+			'tel_administracja_2' => array( 'label' => 'Telefon — dział administracji (drugi numer)', 'hint' => 'Opcjonalnie. Puste pole nie jest wyświetlane na stronie.' ),
+			'opis_administracja'  => array( 'label' => 'Opis — dział administracji', 'type' => 'textarea', 'hint' => 'Tekst wyświetlany na stronie Kontakt pod numerem telefonu.' ),
+			'tel_techniczny'      => array( 'label' => 'Telefon — dział techniczny' ),
+			'tel_techniczny_2'    => array( 'label' => 'Telefon — dział techniczny (drugi numer)', 'hint' => 'Opcjonalnie. Puste pole nie jest wyświetlane na stronie.' ),
+			'opis_techniczny'     => array( 'label' => 'Opis — dział techniczny', 'type' => 'textarea', 'hint' => 'Tekst wyświetlany na stronie Kontakt pod numerem telefonu.' ),
+			'tel_windykacja'      => array( 'label' => 'Telefon — dział windykacji' ),
+			'opis_windykacja'     => array( 'label' => 'Opis — dział windykacji', 'type' => 'textarea', 'hint' => 'Tekst wyświetlany na stronie Kontakt pod numerem telefonu.' ),
+			'faks'                => array( 'label' => 'Faks' ),
+			'email'               => array( 'label' => 'E-mail publiczny' ),
+			'email_formularze'    => array( 'label' => 'E-mail dla formularzy', 'hint' => 'Na ten adres trafiają wiadomości z formularzy na stronie.' ),
+		),
+		'Zgłaszanie awarii poza godzinami pracy biura' => array(
+			'awaria_tel'   => array( 'label' => 'Telefon dyżurny', 'hint' => 'Numer wyświetlany na stronie kontaktowej, przy godzinach otwarcia i w stopce.' ),
+			'awaria_osoba' => array( 'label' => 'Osoba pełniąca dyżur', 'hint' => 'Opcjonalnie.' ),
+			'awaria_kiedy' => array( 'label' => 'Kiedy obowiązuje dyżur', 'hint' => 'Np. od poniedziałku do piątku od godziny 15:00, w soboty, niedziele i święta całodobowo.' ),
 		),
 		'Godziny otwarcia' => array(
 			'godziny_pn'      => array( 'label' => 'Poniedziałek' ),
@@ -109,9 +151,9 @@ function trrol_settings_groups() {
 			'godziny_pt'      => array( 'label' => 'Piątek' ),
 			'godziny_weekend' => array( 'label' => 'Sobota, niedziela' ),
 		),
-		'Mapa i dokumenty' => array(
+		'Mapa i regulaminy' => array(
 			'mapa_embed'    => array( 'label' => 'Adres osadzenia mapy', 'type' => 'url', 'hint' => 'Google Maps → Udostępnij → Umieść mapę → skopiuj adres z atrybutu src.' ),
-			'pdf_regulamin' => array( 'label' => 'PDF — Regulamin użytkowania lokali', 'type' => 'file', 'hint' => 'Wgraj plik w Multimediach i wklej tutaj jego adres.' ),
+			'pdf_regulamin' => array( 'label' => 'PDF — Regulamin użytkowania lokali i porządku domowego', 'type' => 'file', 'hint' => 'Plik pobierany ze strony głównej i ze strony „Regulaminy”. Wgraj plik w Mediach i wklej tutaj jego adres.' ),
 			'pdf_woda'      => array( 'label' => 'PDF — Rozliczanie wody i ścieków', 'type' => 'file' ),
 		),
 		'SEO i widoczność w Google' => array(
@@ -173,7 +215,9 @@ function trrol_sanitize_options( $input ) {
 			$value = wp_unslash( $input[ $key ] );
 			$type  = isset( $field['type'] ) ? $field['type'] : 'text';
 
-			if ( 'url' === $type || 'file' === $type ) {
+			if ( 'textarea' === $type ) {
+				$out[ $key ] = sanitize_textarea_field( $value );
+			} elseif ( 'url' === $type || 'file' === $type ) {
 				$out[ $key ] = esc_url_raw( trim( $value ) );
 			} elseif ( false !== strpos( $key, 'email' ) ) {
 				$out[ $key ] = sanitize_email( trim( $value ) );
@@ -205,12 +249,20 @@ function trrol_settings_page() {
 					<tr>
 						<th scope="row"><label for="trrol-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $field['label'] ); ?></label></th>
 						<td>
-							<input
-								type="text"
-								id="trrol-<?php echo esc_attr( $key ); ?>"
-								name="trrol_options[<?php echo esc_attr( $key ); ?>]"
-								value="<?php echo esc_attr( trrol_opt( $key ) ); ?>"
-								class="regular-text<?php echo ( isset( $field['type'] ) && in_array( $field['type'], array( 'url', 'file' ), true ) ) ? ' large-text' : ''; ?>">
+							<?php if ( isset( $field['type'] ) && 'textarea' === $field['type'] ) : ?>
+								<textarea
+									id="trrol-<?php echo esc_attr( $key ); ?>"
+									name="trrol_options[<?php echo esc_attr( $key ); ?>]"
+									rows="2"
+									class="large-text"><?php echo esc_textarea( trrol_opt_saved( $key ) ); ?></textarea>
+							<?php else : ?>
+								<input
+									type="text"
+									id="trrol-<?php echo esc_attr( $key ); ?>"
+									name="trrol_options[<?php echo esc_attr( $key ); ?>]"
+									value="<?php echo esc_attr( trrol_opt_saved( $key ) ); ?>"
+									class="regular-text<?php echo ( isset( $field['type'] ) && in_array( $field['type'], array( 'url', 'file' ), true ) ) ? ' large-text' : ''; ?>">
+							<?php endif; ?>
 							<?php if ( ! empty( $field['hint'] ) ) : ?>
 								<p class="description"><?php echo esc_html( $field['hint'] ); ?></p>
 							<?php endif; ?>

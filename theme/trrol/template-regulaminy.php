@@ -74,7 +74,7 @@ $showing_pdf = isset( $pdf_map[ $showing->post_name ] ) ? $pdf_map[ $showing->po
 					<div class="docs-nav__dl">
 						<p class="docs-nav__label" style="padding-bottom:8px">Do pobrania</p>
 						<?php if ( trrol_opt( 'pdf_regulamin' ) ) : ?>
-							<p style="margin-bottom:8px"><a href="<?php echo esc_url( trrol_opt( 'pdf_regulamin' ) ); ?>" download>Regulamin użytkowania lokali (PDF)</a></p>
+							<p style="margin-bottom:8px"><a href="<?php echo esc_url( trrol_opt( 'pdf_regulamin' ) ); ?>" download>Regulamin użytkowania lokali i porządku domowego (PDF)</a></p>
 						<?php endif; ?>
 						<?php if ( trrol_opt( 'pdf_woda' ) ) : ?>
 							<p><a href="<?php echo esc_url( trrol_opt( 'pdf_woda' ) ); ?>" download>Rozliczanie wody i ścieków (PDF)</a></p>
