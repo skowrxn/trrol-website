@@ -57,7 +57,7 @@ const top = (process.argv[4] || '').replace('--top=', '');
 if (top) {
   const shifted = fs.readFileSync(out, 'utf8').replace(
     /<\/head>/i,
-    `<style>html{margin-top:-${parseInt(top, 10)}px}</style></head>`
+    `<style>body{position:relative;top:-${parseInt(top, 10)}px}div.trrol-annot-layer{top:-32px!important}</style></head>`
   );
   const out2 = path.join(PREP, `${nazwa}--${top}.html`);
   fs.writeFileSync(out2, shifted, 'utf8');
