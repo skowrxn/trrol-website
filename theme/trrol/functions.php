@@ -9,13 +9,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TRROL_VERSION', '1.1.1' );
+define( 'TRROL_VERSION', '1.1.2' );
 
 require_once get_theme_file_path( 'inc/settings.php' );
 require_once get_theme_file_path( 'inc/cpt.php' );
 require_once get_theme_file_path( 'inc/template-tags.php' );
 require_once get_theme_file_path( 'inc/forms.php' );
 require_once get_theme_file_path( 'inc/documents.php' );
+require_once get_theme_file_path( 'inc/maps.php' );
 require_once get_theme_file_path( 'inc/seo.php' );
 
 /**

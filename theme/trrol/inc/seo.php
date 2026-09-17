@@ -466,22 +466,29 @@ function trrol_jsonld() {
 		$organization['openingHoursSpecification'] = $hours;
 	}
 
-	$lat = trrol_opt( 'geo_lat' );
-	$lng = trrol_opt( 'geo_lng' );
-	if ( $lat && $lng ) {
+	$geo = trrol_geo();
+	if ( $geo ) {
 		$organization['geo'] = array(
 			'@type'     => 'GeoCoordinates',
-			'latitude'  => $lat,
-			'longitude' => $lng,
+			'latitude'  => (float) $geo[0],
+			'longitude' => (float) $geo[1],
 		);
 	}
 
+	$gmb  = trrol_gmb();
 	$maps = trrol_opt( 'seo_mapa_link' );
+	if ( ! $maps && $gmb ) {
+		$maps = $gmb['url'];
+	}
 	if ( $maps ) {
 		$organization['hasMap'] = $maps;
 	}
 
-	$profiles = array_filter( array( trrol_opt( 'seo_profil_google' ), trrol_opt( 'seo_profil_facebook' ) ) );
+	$profiles = array_filter( array(
+		$gmb ? $gmb['url'] : trrol_opt( 'seo_profil_google' ),
+		$gmb && ! empty( $gmb['cid'] ) ? 'https://maps.google.com/?cid=' . $gmb['cid'] : '',
+		trrol_opt( 'seo_profil_facebook' ),
+	) );
 	if ( $profiles ) {
 		$organization['sameAs'] = array_values( $profiles );
 	}

@@ -97,7 +97,7 @@ $related = trrol_related_posts( $post_obj, 2 );
 					<h2 class="entry__section-title">Lokalizacja</h2>
 					<div class="map-embed map-embed--tall">
 						<iframe
-							src="<?php echo esc_url( trrol_opt( 'mapa_embed' ) ); ?>"
+							src="<?php echo esc_url( trrol_map_embed() ); ?>"
 							title="Mapa okolicy lokalu"
 							loading="lazy"
 							referrerpolicy="no-referrer-when-downgrade"

@@ -152,17 +152,17 @@ function trrol_settings_groups() {
 			'godziny_weekend' => array( 'label' => 'Sobota, niedziela' ),
 		),
 		'Mapa i regulaminy' => array(
-			'mapa_embed'    => array( 'label' => 'Adres osadzenia mapy', 'type' => 'url', 'hint' => 'Google Maps → Udostępnij → Umieść mapę → skopiuj adres z atrybutu src.' ),
+			'mapa_embed'    => array( 'label' => 'Adres osadzenia mapy', 'type' => 'url', 'hint' => 'Używane tylko wtedy, gdy pole „Wizytówka Google” jest puste. Gdy link do wizytówki jest podany, mapy na stronie pokazują pinezkę wizytówki.' ),
 			'pdf_regulamin' => array( 'label' => 'PDF — Regulamin użytkowania lokali i porządku domowego', 'type' => 'file', 'hint' => 'Plik pobierany ze strony głównej i ze strony „Regulaminy”. Wgraj plik w Mediach i wklej tutaj jego adres.' ),
 			'pdf_woda'      => array( 'label' => 'PDF — Rozliczanie wody i ścieków', 'type' => 'file' ),
 		),
 		'SEO i widoczność w Google' => array(
 			'seo_opis_home'           => array( 'label' => 'Opis strony głównej', 'hint' => 'To zdanie widać w wynikach wyszukiwania pod tytułem. Najlepiej do 155 znaków.' ),
 			'seo_google_verification' => array( 'label' => 'Kod weryfikacyjny Google', 'hint' => 'Sama wartość z atrybutu content znacznika google-site-verification (Search Console → Weryfikacja → znacznik HTML).' ),
-			'seo_profil_google'       => array( 'label' => 'Wizytówka Google', 'type' => 'url', 'hint' => 'Adres profilu firmy w Mapach Google — łączy stronę z wizytówką.' ),
+			'seo_profil_google'       => array( 'label' => 'Wizytówka Google', 'type' => 'url', 'hint' => 'Link do wizytówki (Mapy Google → wizytówka firmy → Udostępnij → Kopiuj link). Mapy na stronie pokazują wtedy tę wizytówkę, a przy mapach pojawia się link „Zobacz w Mapach Google”.' ),
 			'seo_profil_facebook'     => array( 'label' => 'Profil na Facebooku', 'type' => 'url' ),
 			'seo_mapa_link'           => array( 'label' => 'Link do biura na mapie', 'type' => 'url', 'hint' => 'Zwykły link do lokalizacji biura w Mapach Google.' ),
-			'geo_lat'                 => array( 'label' => 'Szerokość geograficzna biura', 'hint' => 'Opcjonalnie, np. 50.3275. W Mapach Google: prawy przycisk na pinezce → współrzędne.' ),
+			'geo_lat'                 => array( 'label' => 'Szerokość geograficzna biura', 'hint' => 'Opcjonalnie. Puste pole — współrzędne pobierane są z wizytówki Google.' ),
 			'geo_lng'                 => array( 'label' => 'Długość geograficzna biura', 'hint' => 'Opcjonalnie, np. 19.0294.' ),
 		),
 	);

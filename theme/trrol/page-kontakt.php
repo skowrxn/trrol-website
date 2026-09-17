@@ -105,12 +105,13 @@ $awaria = trrol_awaria();
 
 				<div class="map-embed">
 					<iframe
-						src="<?php echo esc_url( trrol_opt( 'mapa_embed' ) ); ?>"
+						src="<?php echo esc_url( trrol_map_embed() ); ?>"
 						title="Mapa — biuro TRROL, <?php echo esc_attr( trrol_opt( 'ulica' ) ); ?>"
 						loading="lazy"
 						referrerpolicy="no-referrer-when-downgrade"
 						allowfullscreen></iframe>
 				</div>
+				<p class="map-link"><a class="link-arrow" href="<?php echo esc_url( trrol_map_link() ); ?>" target="_blank" rel="noopener">Zobacz w Mapach Google →</a></p>
 			</div>
 		</div>
 	</section>

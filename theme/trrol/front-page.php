@@ -231,7 +231,7 @@ $trrol_aktualnosc = get_posts( array( 'post_type' => 'post', 'posts_per_page' =>
 		<div class="office">
 			<div class="office__map">
 				<iframe
-					src="<?php echo esc_url( trrol_opt( 'mapa_embed' ) ); ?>"
+					src="<?php echo esc_url( trrol_map_embed() ); ?>"
 					title="Mapa — biuro TRROL, <?php echo esc_attr( trrol_opt( 'ulica' ) ); ?>"
 					loading="lazy"
 					referrerpolicy="no-referrer-when-downgrade"
@@ -250,6 +250,7 @@ $trrol_aktualnosc = get_posts( array( 'post_type' => 'post', 'posts_per_page' =>
 						<span class="office__value"><?php echo esc_html( trrol_opt( 'faks' ) ); ?></span>
 					</div>
 				</div>
+				<p class="office__maplink"><a class="link-arrow" href="<?php echo esc_url( trrol_map_link() ); ?>" target="_blank" rel="noopener">Zobacz w Mapach Google →</a></p>
 				<div class="office__actions">
 					<a class="btn btn--primary btn--sm" href="<?php echo esc_url( home_url( '/kontakt/' ) ); ?>">Wszystkie kontakty</a>
 					<a class="btn btn--outline btn--sm" href="<?php echo esc_url( home_url( '/kontakt/#formularz' ) ); ?>">Napisz do nas</a>
