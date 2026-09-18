@@ -37,7 +37,6 @@ function trrol_default_options() {
 		'awaria_tel'       => '510-141-114',
 		'awaria_osoba'     => 'Przemysław Hrabia',
 		'awaria_kiedy'     => 'od poniedziałku do piątku od godziny 15:00, w soboty, niedziele i święta całodobowo',
-		'faks'             => '(32) 220-45-69',
 		'email'            => 'biuro@trrol.pl',
 		'email_formularze' => 'biuro@trrol.pl',
 		'rok_zalozenia'    => '2017',
@@ -50,6 +49,13 @@ function trrol_default_options() {
 		'mapa_embed'       => 'https://www.google.com/maps?q=' . rawurlencode( 'ul. Śląska 80, 41-100 Siemianowice Śląskie' ) . '&output=embed',
 		'pdf_regulamin'    => '',
 		'pdf_woda'         => '',
+		'odpady_opis'      => 'Terminy wywozu odpadów komunalnych i segregowanych dla budynków w zarządzie.',
+		'odpady_nazwa_1'   => '',
+		'odpady_pdf_1'     => '',
+		'odpady_nazwa_2'   => '',
+		'odpady_pdf_2'     => '',
+		'odpady_nazwa_3'   => '',
+		'odpady_pdf_3'     => '',
 	);
 }
 
@@ -134,7 +140,6 @@ function trrol_settings_groups() {
 			'opis_techniczny'     => array( 'label' => 'Opis — dział techniczny', 'type' => 'textarea', 'hint' => 'Tekst wyświetlany na stronie Kontakt pod numerem telefonu.' ),
 			'tel_windykacja'      => array( 'label' => 'Telefon — dział windykacji' ),
 			'opis_windykacja'     => array( 'label' => 'Opis — dział windykacji', 'type' => 'textarea', 'hint' => 'Tekst wyświetlany na stronie Kontakt pod numerem telefonu.' ),
-			'faks'                => array( 'label' => 'Faks' ),
 			'email'               => array( 'label' => 'E-mail publiczny' ),
 			'email_formularze'    => array( 'label' => 'E-mail dla formularzy', 'hint' => 'Na ten adres trafiają wiadomości z formularzy na stronie.' ),
 		),
@@ -153,8 +158,17 @@ function trrol_settings_groups() {
 		),
 		'Mapa i regulaminy' => array(
 			'mapa_embed'    => array( 'label' => 'Adres osadzenia mapy', 'type' => 'url', 'hint' => 'Używane tylko wtedy, gdy pole „Wizytówka Google” jest puste. Gdy link do wizytówki jest podany, mapy na stronie pokazują pinezkę wizytówki.' ),
-			'pdf_regulamin' => array( 'label' => 'PDF — Regulamin użytkowania lokali i porządku domowego', 'type' => 'file', 'hint' => 'Plik pobierany ze strony głównej i ze strony „Regulaminy”. Wgraj plik w Mediach i wklej tutaj jego adres.' ),
+			'pdf_regulamin' => array( 'label' => 'PDF — Regulamin użytkowania lokali i porządku domowego', 'type' => 'file', 'hint' => 'Plik pobierany ze strony głównej i ze strony „Regulaminy”. Przycisk „Wybierz plik” otwiera bibliotekę mediów — można w niej też wgrać nowy plik.' ),
 			'pdf_woda'      => array( 'label' => 'PDF — Rozliczanie wody i ścieków', 'type' => 'file' ),
+		),
+		'Harmonogram odbioru odpadów' => array(
+			'odpady_opis'    => array( 'label' => 'Opis', 'type' => 'textarea', 'hint' => 'Tekst w ramce „Harmonogram odbioru odpadów” na stronie głównej, pod ramką „Regulaminy”.' ),
+			'odpady_nazwa_1' => array( 'label' => 'Plik 1 — nazwa', 'hint' => 'Np. Harmonogram odbioru odpadów 2026 lub nazwa ulicy/rejonu. Puste pole — wyświetlana jest nazwa „Harmonogram odbioru odpadów”.' ),
+			'odpady_pdf_1'   => array( 'label' => 'Plik 1 — PDF', 'type' => 'file' ),
+			'odpady_nazwa_2' => array( 'label' => 'Plik 2 — nazwa', 'hint' => 'Opcjonalnie, np. gdy harmonogramy różnią się dla poszczególnych budynków.' ),
+			'odpady_pdf_2'   => array( 'label' => 'Plik 2 — PDF', 'type' => 'file' ),
+			'odpady_nazwa_3' => array( 'label' => 'Plik 3 — nazwa', 'hint' => 'Opcjonalnie.' ),
+			'odpady_pdf_3'   => array( 'label' => 'Plik 3 — PDF', 'type' => 'file' ),
 		),
 		'SEO i widoczność w Google' => array(
 			'seo_opis_home'           => array( 'label' => 'Opis strony głównej', 'hint' => 'To zdanie widać w wynikach wyszukiwania pod tytułem. Najlepiej do 155 znaków.' ),
@@ -183,6 +197,37 @@ function trrol_settings_menu() {
 	);
 }
 add_action( 'admin_menu', 'trrol_settings_menu' );
+
+/**
+ * Wybór plików PDF z biblioteki mediów na stronie ustawień.
+ *
+ * @param string $hook Identyfikator ekranu.
+ */
+function trrol_settings_assets( $hook ) {
+	if ( 'toplevel_page_trrol-settings' !== $hook ) {
+		return;
+	}
+	wp_enqueue_media();
+	wp_add_inline_script( 'media-editor', <<<'JS'
+jQuery(function ($) {
+	$(document).on('click', '.trrol-pick-file', function (e) {
+		e.preventDefault();
+		var input = $('#' + $(this).data('target'));
+		var frame = wp.media({ title: 'Wybierz plik', button: { text: 'Użyj tego pliku' }, multiple: false });
+		frame.on('select', function () {
+			input.val(frame.state().get('selection').first().toJSON().url);
+		});
+		frame.open();
+	});
+	$(document).on('click', '.trrol-clear-file', function (e) {
+		e.preventDefault();
+		$('#' + $(this).data('target')).val('');
+	});
+});
+JS
+	);
+}
+add_action( 'admin_enqueue_scripts', 'trrol_settings_assets' );
 
 /**
  * Rejestracja ustawień.
@@ -262,6 +307,12 @@ function trrol_settings_page() {
 									name="trrol_options[<?php echo esc_attr( $key ); ?>]"
 									value="<?php echo esc_attr( trrol_opt_saved( $key ) ); ?>"
 									class="regular-text<?php echo ( isset( $field['type'] ) && in_array( $field['type'], array( 'url', 'file' ), true ) ) ? ' large-text' : ''; ?>">
+							<?php endif; ?>
+							<?php if ( isset( $field['type'] ) && 'file' === $field['type'] ) : ?>
+								<p style="margin-top:6px">
+									<button type="button" class="button trrol-pick-file" data-target="trrol-<?php echo esc_attr( $key ); ?>">Wybierz plik</button>
+									<button type="button" class="button-link trrol-clear-file" data-target="trrol-<?php echo esc_attr( $key ); ?>" style="margin-left:8px">Usuń</button>
+								</p>
 							<?php endif; ?>
 							<?php if ( ! empty( $field['hint'] ) ) : ?>
 								<p class="description"><?php echo esc_html( $field['hint'] ); ?></p>

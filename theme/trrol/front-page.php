@@ -81,7 +81,10 @@ $trrol_aktualnosc = get_posts( array( 'post_type' => 'post', 'posts_per_page' =>
 				</div>
 			<?php endif; ?>
 
-			<?php trrol_docs_card(); ?>
+			<div class="docs-stack">
+				<?php trrol_docs_card(); ?>
+				<?php trrol_odpady_card(); ?>
+			</div>
 		</div>
 	</section>
 
@@ -244,10 +247,6 @@ $trrol_aktualnosc = get_posts( array( 'post_type' => 'post', 'posts_per_page' =>
 					<div>
 						<span class="office__label">Telefon</span>
 						<a class="office__value" href="<?php echo esc_attr( trrol_tel_href( trrol_opt( 'tel_sekretariat' ) ) ); ?>"><?php echo esc_html( trrol_opt( 'tel_sekretariat' ) ); ?></a>
-					</div>
-					<div>
-						<span class="office__label">Faks</span>
-						<span class="office__value"><?php echo esc_html( trrol_opt( 'faks' ) ); ?></span>
 					</div>
 				</div>
 				<p class="office__maplink"><a class="link-arrow" href="<?php echo esc_url( trrol_map_link() ); ?>" target="_blank" rel="noopener">Zobacz w Mapach Google →</a></p>

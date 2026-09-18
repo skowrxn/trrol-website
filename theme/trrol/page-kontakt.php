@@ -57,9 +57,6 @@ $awaria = trrol_awaria();
 				<div class="contact-card">
 					<p class="contact-card__label"><?php echo esc_html( $dzial['label'] ); ?></p>
 					<p class="contact-card__phones"><?php echo trrol_phone_links( $dzial['phones'], 'contact-card__phone' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></p>
-					<?php if ( ! empty( $dzial['faks'] ) ) : ?>
-						<p class="contact-card__alt">faks <?php echo esc_html( $dzial['faks'] ); ?></p>
-					<?php endif; ?>
 					<?php if ( ! empty( $dzial['email'] ) ) : ?>
 						<a class="contact-card__mail" href="mailto:<?php echo esc_attr( $dzial['email'] ); ?>"><?php echo esc_html( $dzial['email'] ); ?></a>
 					<?php endif; ?>

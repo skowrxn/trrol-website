@@ -432,6 +432,47 @@ function trrol_docs_card() {
 }
 
 /**
+ * Ramka „Harmonogram odbioru odpadów” pod ramką z regulaminami.
+ */
+function trrol_odpady_card() {
+	$files = array();
+	for ( $i = 1; $i <= 3; $i++ ) {
+		$url = trrol_opt( 'odpady_pdf_' . $i );
+		if ( $url ) {
+			$name    = trrol_opt( 'odpady_nazwa_' . $i );
+			$files[] = array(
+				'name' => $name ? $name : 'Harmonogram odbioru odpadów',
+				'url'  => $url,
+			);
+		}
+	}
+	$opis = trrol_opt_saved( 'odpady_opis' );
+	?>
+	<div class="docs-card" id="odpady">
+		<h2 class="docs-card__title">Harmonogram odbioru odpadów</h2>
+		<?php if ( '' !== trim( $opis ) ) : ?>
+			<p class="docs-card__text"><?php echo esc_html( $opis ); ?></p>
+		<?php endif; ?>
+		<div class="docs-card__list">
+			<?php if ( $files ) : ?>
+				<?php foreach ( $files as $file ) : ?>
+					<a class="doc-link" href="<?php echo esc_url( $file['url'] ); ?>" download>
+						<?php echo trrol_icon( 'pobierz', 20, '#7FA5DC' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+						<span>
+							<span class="doc-link__name"><?php echo esc_html( $file['name'] ); ?></span>
+							<span class="doc-link__type">PDF do pobrania</span>
+						</span>
+					</a>
+				<?php endforeach; ?>
+			<?php else : ?>
+				<p class="docs-card__empty">Aktualny harmonogram zostanie udostępniony wkrótce. Informacji udziela dział administracji, tel. <?php echo esc_html( trrol_opt( 'tel_administracja' ) ); ?>.</p>
+			<?php endif; ?>
+		</div>
+	</div>
+	<?php
+}
+
+/**
  * Paginacja list.
  */
 function trrol_pagination() {

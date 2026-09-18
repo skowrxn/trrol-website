@@ -588,3 +588,8 @@ a.contact-card__phone:hover{color:var(--blue)}
 
 .office__maplink{margin-top:20px}
 .map-link{margin-top:-8px}
+
+/* Ramki „Regulaminy” i „Harmonogram odbioru odpadów” jedna pod drugą */
+.docs-stack{display:flex;flex-direction:column;gap:24px}
+.docs-stack .docs-card{flex:1 1 auto}
+.docs-card__empty{font-size:14px;line-height:1.6;color:var(--muted-2);border-top:1px solid rgba(255,255,255,.12);padding-top:16px}

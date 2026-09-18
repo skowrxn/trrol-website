@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TRROL_VERSION', '1.1.2' );
+define( 'TRROL_VERSION', '1.1.3' );
 
 require_once get_theme_file_path( 'inc/settings.php' );
 require_once get_theme_file_path( 'inc/cpt.php' );

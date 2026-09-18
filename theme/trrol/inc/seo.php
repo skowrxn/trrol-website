@@ -444,7 +444,6 @@ function trrol_jsonld() {
 			trrol_opt( 'rok_zalozenia' )
 		),
 		'telephone'   => trrol_opt( 'tel_sekretariat' ),
-		'faxNumber'   => trrol_opt( 'faks' ),
 		'email'       => trrol_opt( 'email' ),
 		'vatID'       => 'PL' . preg_replace( '/\D/', '', trrol_opt( 'nip' ) ),
 		'taxID'       => trrol_opt( 'nip' ),
