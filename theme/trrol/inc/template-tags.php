@@ -391,6 +391,27 @@ function trrol_document_meta( $doc ) {
 }
 
 /**
+ * Kolejne regulaminy dodane w Ustawieniach TRROL (nazwa + PDF).
+ *
+ * @return array<int,array{name:string,url:string,pdf:bool}>
+ */
+function trrol_regulaminy_dodatkowe() {
+	$out = array();
+	for ( $i = 1; $i <= 5; $i++ ) {
+		$url = trrol_opt( 'regulamin_pdf_' . $i );
+		if ( $url ) {
+			$name  = trrol_opt( 'regulamin_nazwa_' . $i );
+			$out[] = array(
+				'name' => $name ? $name : 'Regulamin',
+				'url'  => $url,
+				'pdf'  => true,
+			);
+		}
+	}
+	return $out;
+}
+
+/**
  * Ciemna karta z regulaminami do pobrania (strona główna).
  *
  * Regulaminy są niezależne od sekcji „Dokumenty do pobrania” — pliki podaje się
@@ -412,6 +433,7 @@ function trrol_docs_card() {
 			'pdf'  => (bool) trrol_opt( 'pdf_woda' ),
 		),
 	);
+	$docs = array_merge( $docs, trrol_regulaminy_dodatkowe() );
 	?>
 	<div class="docs-card">
 		<h2 class="docs-card__title">Regulaminy</h2>

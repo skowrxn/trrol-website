@@ -70,15 +70,19 @@ $showing_pdf = isset( $pdf_map[ $showing->post_name ] ) ? $pdf_map[ $showing->po
 					<?php endforeach; ?>
 				</div>
 
-				<?php if ( trrol_opt( 'pdf_regulamin' ) || trrol_opt( 'pdf_woda' ) ) : ?>
+				<?php $dodatkowe = trrol_regulaminy_dodatkowe(); ?>
+				<?php if ( trrol_opt( 'pdf_regulamin' ) || trrol_opt( 'pdf_woda' ) || $dodatkowe ) : ?>
 					<div class="docs-nav__dl">
 						<p class="docs-nav__label" style="padding-bottom:8px">Do pobrania</p>
 						<?php if ( trrol_opt( 'pdf_regulamin' ) ) : ?>
 							<p style="margin-bottom:8px"><a href="<?php echo esc_url( trrol_opt( 'pdf_regulamin' ) ); ?>" download>Regulamin użytkowania lokali i porządku domowego (PDF)</a></p>
 						<?php endif; ?>
 						<?php if ( trrol_opt( 'pdf_woda' ) ) : ?>
-							<p><a href="<?php echo esc_url( trrol_opt( 'pdf_woda' ) ); ?>" download>Rozliczanie wody i ścieków (PDF)</a></p>
+							<p style="margin-bottom:8px"><a href="<?php echo esc_url( trrol_opt( 'pdf_woda' ) ); ?>" download>Rozliczanie wody i ścieków (PDF)</a></p>
 						<?php endif; ?>
+						<?php foreach ( $dodatkowe as $dok ) : ?>
+							<p style="margin-bottom:8px"><a href="<?php echo esc_url( $dok['url'] ); ?>" download><?php echo esc_html( $dok['name'] ); ?> (PDF)</a></p>
+						<?php endforeach; ?>
 					</div>
 				<?php endif; ?>
 			</aside>
